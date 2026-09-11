@@ -1,0 +1,17 @@
+{
+  "name": "NIVARAN — National Civic Innovation Platform",
+  "short_name": "NIVARAN",
+  "description": "Connecting Civic Need with Campus Brainpower & Industry Capital. From Reported to Resolved.",
+  "start_url": "./#/",
+  "display": "standalone",
+  "background_color": "#F9F8F6",
+  "theme_color": "#1B4942",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='20' fill='%231B4942'/%3E%3Cpath d='M50 20 L80 35 L80 60 C80 75 50 88 50 88 C50 88 20 75 20 60 L20 35 Z' fill='%232D6A4F' stroke='%23CADED4' stroke-width='4'/%3E%3Cpath d='M42 52 L48 58 L62 44' fill='none' stroke='white' stroke-width='6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E",
+      "sizes": "192x192",
+      "type": "image/svg+xml"
+    }
+  ]
+}

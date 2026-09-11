@@ -1,0 +1,546 @@
+/* NIVARAN Custom Stylesheet - Comprehensive Civic-Tech System */
+
+/* Custom Clean Scrollbar */
+::-webkit-scrollbar {
+  width: 7px;
+  height: 7px;
+}
+::-webkit-scrollbar-track {
+  background: #f1f5f9;
+}
+::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+/* View Section Transition */
+.view-section {
+  animation: fadeInView 0.2s ease-out forwards;
+}
+
+@keyframes fadeInView {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Clean Role Cards */
+.role-card {
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+  will-change: transform, box-shadow, border-color;
+  background-color: #ffffff;
+}
+
+.role-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 24px -6px rgba(15, 23, 42, 0.08), 0 4px 8px -2px rgba(15, 23, 42, 0.04);
+}
+
+.role-card[data-role="student"]:hover {
+  border-color: #2d6a4f !important;
+}
+
+.role-card[data-role="citizen"]:hover {
+  border-color: #b45309 !important;
+}
+
+.role-card[data-role="industry"]:hover {
+  border-color: #2c4a6f !important;
+}
+
+/* Role Tabs */
+.role-tab {
+  color: #475569;
+  background-color: #ffffff;
+  border: 1px solid #e2e8f0;
+}
+
+.role-tab:hover {
+  color: #0f172a;
+  background-color: #f8fafc;
+}
+
+.role-tab.active-student {
+  background-color: #edf4f0 !important;
+  border-color: #2d6a4f !important;
+  color: #1b4942 !important;
+  font-weight: 700;
+}
+
+.role-tab.active-citizen {
+  background-color: #fef7ed !important;
+  border-color: #b45309 !important;
+  color: #92400e !important;
+  font-weight: 700;
+}
+
+.role-tab.active-industry {
+  background-color: #f0f4f8 !important;
+  border-color: #2c4a6f !important;
+  color: #1e3a5f !important;
+  font-weight: 700;
+}
+
+/* Civic Buttons */
+.btn-civic-teal {
+  background-color: #1b4942 !important;
+  color: #ffffff !important;
+}
+.btn-civic-teal:hover {
+  background-color: #153b35 !important;
+}
+
+.btn-civic-amber {
+  background-color: #b45309 !important;
+  color: #ffffff !important;
+}
+.btn-civic-amber:hover {
+  background-color: #92400e !important;
+}
+
+.btn-civic-slate {
+  background-color: #1e3a5f !important;
+  color: #ffffff !important;
+}
+.btn-civic-slate:hover {
+  background-color: #152840 !important;
+}
+
+/* Civic Badges */
+.badge-civic-teal {
+  background-color: #edf4f0 !important;
+  color: #1b4942 !important;
+  border: 1px solid #caded4 !important;
+}
+
+.badge-civic-amber {
+  background-color: #fef7ed !important;
+  color: #92400e !important;
+  border: 1px solid #fde68a !important;
+}
+
+.badge-civic-slate {
+  background-color: #f0f4f8 !important;
+  color: #1e3a5f !important;
+  border: 1px solid #cbd5e1 !important;
+}
+
+/* Civic Icon Boxes */
+.icon-box-teal {
+  background-color: #edf4f0 !important;
+  color: #1b4942 !important;
+  border: 1px solid #caded4 !important;
+}
+
+.icon-box-amber {
+  background-color: #fef7ed !important;
+  color: #b45309 !important;
+  border: 1px solid #fde68a !important;
+}
+
+.icon-box-slate {
+  background-color: #f0f4f8 !important;
+  color: #1e3a5f !important;
+  border: 1px solid #cbd5e1 !important;
+}
+
+/* Challenge Cards */
+.challenge-card {
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+  background-color: #ffffff;
+}
+
+.challenge-card:hover {
+  transform: translateY(-2px);
+  border-color: #cbd5e1;
+  box-shadow: 0 10px 20px -4px rgba(15, 23, 42, 0.06);
+}
+
+/* Status Indicator Dots */
+.status-dot-open {
+  background-color: #2563eb;
+}
+.status-dot-matched {
+  background-color: #7c3aed;
+}
+.status-dot-progress {
+  background-color: #0284c7;
+}
+.status-dot-pilot {
+  background-color: #d97706;
+}
+.status-dot-deployed {
+  background-color: #15803d;
+}
+.status-dot-resolved {
+  background-color: #15803d;
+}
+
+/* Leaflet Map Overrides & Customizations */
+.map-container {
+  height: 260px;
+  width: 100%;
+  border-radius: 0.75rem;
+  border: 1px solid #cbd5e1;
+  z-index: 10;
+  position: relative;
+}
+
+.map-container-lg {
+  height: 480px;
+  width: 100%;
+  border-radius: 0.75rem;
+  border: 1px solid #cbd5e1;
+  z-index: 10;
+}
+
+.leaflet-popup-content-wrapper {
+  border-radius: 0.5rem;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+  padding: 4px;
+}
+
+.leaflet-popup-content {
+  margin: 10px 12px;
+  font-family: 'Inter', sans-serif;
+  font-size: 12px;
+  color: #1e293b;
+}
+
+/* Kanban Board Columns & Cards */
+.kanban-column {
+  background-color: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 0.75rem;
+  min-height: 400px;
+}
+
+.kanban-card {
+  background-color: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 0.5rem;
+  transition: all 0.15s ease;
+}
+
+.kanban-card:hover {
+  border-color: #cbd5e1;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+}
+
+/* Certificate Styling */
+.certificate-frame {
+  background-color: #ffffff;
+  border: 8px double #1b4942;
+  box-shadow: inset 0 0 0 2px #caded4;
+}
+
+.seal-badge {
+  background: radial-gradient(circle, #edf4f0 0%, #d1e7dc 100%);
+  border: 3px solid #1b4942;
+}
+
+/* CSR Statutory Report Styling */
+.csr-report-frame {
+  background-color: #ffffff;
+  border: 1px solid #cbd5e1;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+}
+
+/* Status Pipeline Stepper */
+.stepper-step {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.stepper-step:not(:last-child)::after {
+  content: '';
+  height: 2px;
+  flex: 1;
+  background-color: #e2e8f0;
+  margin: 0 0.5rem;
+}
+
+.stepper-step.completed::after {
+  background-color: #1b4942;
+}
+
+/* Toast In/Out */
+.toast-visible {
+  transform: translateY(0) !important;
+  opacity: 1 !important;
+}
+
+/* Notification Dropdown */
+.notif-dropdown {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  width: 320px;
+  background-color: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 0.75rem;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+  z-index: 50;
+}
+
+/* Sticky Offline Warning Banner */
+#offline-banner {
+  background: #fef3c7;
+  border-bottom: 1px solid #fde68a;
+  color: #92400e;
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 0.5rem 1rem;
+  text-align: center;
+  position: sticky;
+  top: 80px;
+  z-index: 35;
+  transition: all 0.3s ease;
+}
+
+/* PPO Badges & Cards */
+.ppo-badge {
+  background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+  color: #78350f;
+  border: 1px solid #f59e0b;
+  font-weight: 700;
+  font-size: 0.7rem;
+  padding: 0.2rem 0.6rem;
+  border-radius: 9999px;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  box-shadow: 0 1px 2px rgba(180, 83, 9, 0.15);
+}
+
+.ppo-card {
+  background: #ffffff;
+  border: 1.5px solid #f59e0b;
+  border-radius: 0.875rem;
+  box-shadow: 0 4px 12px -2px rgba(180, 83, 9, 0.08);
+  position: relative;
+  overflow: hidden;
+}
+
+.ppo-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, #b45309, #f59e0b, #d97706);
+}
+
+/* Leaderboard Podium & Gamification */
+.podium-card {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 1rem;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.podium-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 24px -4px rgba(0, 0, 0, 0.08);
+}
+
+.podium-rank-1 {
+  border-color: #f59e0b;
+  background: linear-gradient(180deg, #fffbeb 0%, #ffffff 40%);
+}
+
+.podium-rank-2 {
+  border-color: #94a3b8;
+  background: linear-gradient(180deg, #f8fafc 0%, #ffffff 40%);
+}
+
+.podium-rank-3 {
+  border-color: #d97706;
+  background: linear-gradient(180deg, #fff7ed 0%, #ffffff 40%);
+}
+
+.state-award-card {
+  border-left: 4px solid #1b4942;
+  transition: all 0.2s ease;
+}
+
+.state-award-card:hover {
+  transform: translateX(3px);
+  border-left-color: #2d6a4f;
+}
+
+/* High-Frequency Clustered Pill */
+.badge-high-frequency {
+  background: #fff1f2;
+  border: 1px solid #fecdd3;
+  color: #be123c;
+  font-weight: 700;
+  font-size: 0.6875rem;
+  padding: 0.25rem 0.5rem;
+  border-radius: 9999px;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+/* Voice Input (Speech-to-Text) Button & State Styles */
+.btn-voice-input {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.35rem;
+  padding: 0.35rem 0.6rem;
+  border-radius: 0.5rem;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  background-color: #f1f5f9;
+  border: 1px solid #cbd5e1;
+  color: #334155;
+  transition: all 0.2s ease;
+  cursor: pointer;
+  user-select: none;
+}
+
+.btn-voice-input:hover {
+  background-color: #e2e8f0;
+  color: #0f172a;
+  border-color: #94a3b8;
+}
+
+.btn-voice-input.is-listening {
+  background-color: #fef2f2 !important;
+  border-color: #ef4444 !important;
+  color: #b91c1c !important;
+  font-weight: 700;
+  animation: voicePulse 1.2s infinite alternate;
+}
+
+@keyframes voicePulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.45);
+  }
+  100% {
+    box-shadow: 0 0 0 6px rgba(239, 68, 68, 0);
+  }
+}
+
+.btn-voice-input .voice-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 9999px;
+  background-color: #94a3b8;
+  display: inline-block;
+}
+
+.btn-voice-input.is-listening .voice-dot {
+  background-color: #ef4444;
+  animation: voiceBlink 0.8s infinite;
+}
+
+@keyframes voiceBlink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.2; }
+}
+
+.btn-voice-input .voice-label {
+  white-space: nowrap;
+}
+
+/* Clickable Interactive Notification Item */
+.notif-item-clickable {
+  transition: all 0.15s ease;
+  cursor: pointer;
+  position: relative;
+  text-decoration: none;
+  display: block;
+}
+.notif-item-clickable:hover {
+  transform: translateX(2px);
+  box-shadow: 0 2px 6px -1px rgba(0, 0, 0, 0.08);
+}
+.notif-item-clickable:active {
+  transform: scale(0.99);
+}
+
+/* Heat Map Legend & Density Badges */
+.density-badge-high {
+  background-color: #FEF2F2;
+  color: #991B1B;
+  border: 1px solid #FECACA;
+}
+.density-badge-med {
+  background-color: #FEF3C7;
+  color: #92400E;
+  border: 1px solid #FDE68A;
+}
+.density-badge-low {
+  background-color: #ECFDF5;
+  color: #065F46;
+  border: 1px solid #A7F3D0;
+}
+
+/* Chat Media Attachments */
+.chat-media-thumbnail {
+  max-width: 220px;
+  max-height: 160px;
+  border-radius: 0.75rem;
+  object-fit: cover;
+  border: 1px solid #e2e8f0;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+.chat-media-thumbnail:hover {
+  transform: scale(1.02);
+}
+.chat-media-video {
+  max-width: 240px;
+  border-radius: 0.75rem;
+  border: 1px solid #e2e8f0;
+}
+
+/* Guided Voice Assistant Styles */
+.guided-voice-modal {
+  background: linear-gradient(135deg, #1B4942 0%, #153B35 100%);
+  color: #ffffff;
+  border-radius: 1.25rem;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.2), 0 10px 10px -5px rgba(0, 0, 0, 0.1);
+}
+
+.voice-wave-bar {
+  display: inline-block;
+  width: 4px;
+  height: 18px;
+  margin: 0 2px;
+  border-radius: 4px;
+  background-color: #6EE7B7;
+  animation: soundWave 1s ease-in-out infinite alternate;
+}
+.voice-wave-bar:nth-child(2) { animation-delay: 0.2s; height: 26px; }
+.voice-wave-bar:nth-child(3) { animation-delay: 0.4s; height: 34px; }
+.voice-wave-bar:nth-child(4) { animation-delay: 0.1s; height: 22px; }
+.voice-wave-bar:nth-child(5) { animation-delay: 0.3s; height: 30px; }
+
+@keyframes soundWave {
+  0% { transform: scaleY(0.3); }
+  100% { transform: scaleY(1); }
+}
+
+/* Official Government Review Badge */
+.govt-seal-badge {
+  background: linear-gradient(135deg, #1E3A5F 0%, #0F172A 100%);
+  color: #F8FAFC;
+  border: 1px solid #334155;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}

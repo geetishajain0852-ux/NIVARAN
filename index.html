@@ -1,0 +1,2251 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>NIVARAN - From Reported to Resolved | Civic Innovation Platform</title>
+  <meta name="description" content="Nivaran turns civic problems into structured challenges, intelligently matches them to the right university expertise, and pairs them with industry backing." />
+  
+  <!-- Google Fonts: Plus Jakarta Sans & Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet" />
+
+  <!-- Bespoke SVG Favicon -->
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%231B4942'/%3E%3Cpath d='M7 23L24 9' stroke='%232D6A4F' stroke-width='3' stroke-linecap='round'/%3E%3Cpath d='M18.5 9H24V14.5' stroke='%232D6A4F' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3Crect x='5' y='7' width='4' height='18' rx='2' fill='white'/%3E%3Crect x='23' y='7' width='4' height='18' rx='2' fill='white'/%3E%3Ccircle cx='15.5' cy='16' r='2.75' fill='%23B45309' stroke='white' stroke-width='1'/%3E%3C/svg%3E" />
+
+  <!-- Leaflet.js CSS -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+            display: ['"Plus Jakarta Sans"', 'sans-serif'],
+          },
+          colors: {
+            civic: {
+              teal: '#1B4942',
+              'teal-dark': '#153B35',
+              'teal-light': '#EDF4F0',
+              'teal-border': '#CADED4',
+              sage: '#2D6A4F',
+              amber: '#B45309',
+              'amber-light': '#FEF7ED',
+              'amber-border': '#FDE68A',
+              slate: '#1E3A5F',
+              'slate-light': '#F0F4F8',
+              'slate-border': '#CBD5E1',
+              charcoal: '#1E293B',
+              muted: '#64748B',
+              bg: '#F9F8F6',
+              surface: '#FFFFFF',
+              border: '#E2E8F0'
+            }
+          }
+        }
+      }
+    };
+  </script>
+
+  <!-- Leaflet.js JS -->
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+  <!-- Custom Stylesheet -->
+  <link rel="stylesheet" href="styles.css" />
+
+  <!-- PWA Web App Manifest -->
+  <link rel="manifest" href="manifest.json" />
+</head>
+<body class="bg-[#F9F8F6] text-slate-800 font-sans antialiased min-h-screen flex flex-col selection:bg-[#CADED4] selection:text-[#1B4942]">
+
+  <!-- Global Header Navigation -->
+  <header class="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-stone-200 transition-all duration-200 shadow-xs">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-3">
+      
+      <!-- Brand Logo -->
+      <a href="#/" class="flex items-center gap-2.5 group focus:outline-none rounded-lg p-1 flex-shrink-0">
+        <div class="w-9 h-9 rounded-lg bg-[#EDF4F0] border border-[#CADED4] flex items-center justify-center text-[#1B4942] group-hover:bg-[#1B4942] transition-all duration-200 shadow-2xs">
+          <svg class="w-5 h-5" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect x="5" y="7" width="3.5" height="18" rx="1.75" class="fill-[#1B4942] group-hover:fill-white transition-colors" />
+            <rect x="23.5" y="7" width="3.5" height="18" rx="1.75" class="fill-[#1B4942] group-hover:fill-white transition-colors" />
+            <path d="M7 23L24 9" class="stroke-[#2D6A4F] group-hover:stroke-[#99F6E4] transition-colors" stroke-width="2.75" stroke-linecap="round" />
+            <path d="M18.5 9H24V14.5" class="stroke-[#2D6A4F] group-hover:stroke-[#99F6E4] transition-colors" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" />
+            <circle cx="15.5" cy="16" r="2.75" fill="#B45309" stroke="#FFFFFF" stroke-width="1.25" />
+          </svg>
+        </div>
+        <div class="flex flex-col">
+          <div class="flex items-center gap-1.5">
+            <span class="font-display font-bold text-lg tracking-wider text-slate-900 group-hover:text-[#1B4942] transition-colors">NIVARAN</span>
+            <span class="text-[9px] uppercase font-bold tracking-wider px-1.5 py-0.5 rounded bg-[#EDF4F0] text-[#1B4942] border border-[#CADED4]">Govt/Civic</span>
+          </div>
+          <span class="text-[10px] text-slate-500 font-medium hidden sm:inline" id="brand-tagline">From Reported to Resolved</span>
+        </div>
+      </a>
+
+      <!-- Desktop Nav Links -->
+      <nav class="hidden lg:flex items-center gap-1 text-xs font-medium text-slate-600">
+        <a href="#/" class="nav-link px-3 py-1.5 rounded-lg hover:text-slate-900 hover:bg-stone-100 transition-colors" data-route="landing" id="nav-home">Home</a>
+        <a href="#/challenges" class="nav-link px-3 py-1.5 rounded-lg hover:text-slate-900 hover:bg-stone-100 transition-colors" data-route="challenges" id="nav-challenges">Challenges</a>
+        <a href="#/leaderboard" class="nav-link px-3 py-1.5 rounded-lg hover:text-slate-900 hover:bg-stone-100 transition-colors" data-route="leaderboard" id="nav-leaderboard">Leaderboard & Awards</a>
+        <a href="#/post-challenge" class="nav-link px-3 py-1.5 rounded-lg hover:text-slate-900 hover:bg-stone-100 transition-colors" data-route="post-challenge" id="nav-post-link">Post a Challenge</a>
+
+        <!-- Portals & Tools Dropdown -->
+        <div class="relative group">
+          <button type="button" id="portals-dropdown-btn" class="nav-link px-3 py-1.5 rounded-lg hover:text-slate-900 hover:bg-stone-100 transition-colors inline-flex items-center gap-1 focus:outline-none">
+            <span>Portals & Tools</span>
+            <svg class="w-3.5 h-3.5 text-slate-400 group-hover:text-slate-700 transition-transform group-hover:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+            </svg>
+          </button>
+          <div id="portals-dropdown-menu" class="dropdown-menu absolute left-0 mt-1 w-64 rounded-xl bg-white border border-stone-200 shadow-lg py-2 z-50 hidden group-hover:block transition-all">
+            <div class="px-3 py-1 text-[10px] uppercase font-bold tracking-wider text-slate-400">Specialized Workspaces</div>
+            <a href="#/workspace/NIV-401" class="flex items-start gap-2.5 px-3 py-2 text-xs text-slate-700 hover:bg-[#EDF4F0] hover:text-[#1B4942] transition-colors" data-route="workspace">
+              <div class="w-7 h-7 rounded-lg bg-[#EDF4F0] text-[#1B4942] flex items-center justify-center flex-shrink-0 mt-0.5">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 14l9-5-9-5-9 5 9 5z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 14v7"/></svg>
+              </div>
+              <div>
+                <div class="font-semibold text-slate-900">Collaborative Workspace</div>
+                <div class="text-[11px] text-slate-500">Milestone Kanban & testing sandbox</div>
+              </div>
+            </a>
+            <a href="#/industry-review" class="flex items-start gap-2.5 px-3 py-2 text-xs text-slate-700 hover:bg-[#F0F4F8] hover:text-[#1E3A5F] transition-colors" data-route="industry-review">
+              <div class="w-7 h-7 rounded-lg bg-[#F0F4F8] text-[#1E3A5F] flex items-center justify-center flex-shrink-0 mt-0.5">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
+              </div>
+              <div>
+                <div class="font-semibold text-slate-900">Industry Review Panel</div>
+                <div class="text-[11px] text-slate-500">CSR match, PPO awards & reports</div>
+              </div>
+            </a>
+            <a href="#/dashboard" class="flex items-start gap-2.5 px-3 py-2 text-xs text-slate-700 hover:bg-[#FEF7ED] hover:text-[#B45309] transition-colors" data-route="dashboard">
+              <div class="w-7 h-7 rounded-lg bg-[#FEF7ED] text-[#B45309] flex items-center justify-center flex-shrink-0 mt-0.5">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
+              </div>
+              <div>
+                <div class="font-semibold text-slate-900">Public Pipeline Dashboard</div>
+                <div class="text-[11px] text-slate-500">Live national metrics & audit records</div>
+              </div>
+            </a>
+          </div>
+        </div>
+      </nav>
+
+      <!-- Right Header Actions: Language, Role, Notification, and Dynamic Auth/Profile -->
+      <div class="flex items-center gap-2 flex-shrink-0">
+        
+        <!-- Language Switcher Dropdown (All 17 Jharkhand Languages) -->
+        <div class="relative">
+          <select id="lang-switcher" class="h-9 bg-stone-100 hover:bg-stone-200 border border-stone-200 text-slate-800 font-semibold px-2.5 rounded-lg text-xs focus:outline-none cursor-pointer transition-colors" title="Change Platform Language (17 Jharkhand State Languages)">
+            <option value="en">English (EN)</option>
+            <option value="hi">हिन्दी (Hindi)</option>
+            <option value="sat">ᱥᱟᱱᱛᱟᱲᱤ (Santali - Ol Chiki)</option>
+            <option value="nag">नागपुरी (Nagpuri)</option>
+            <option value="kht">खोरठा (Khortha)</option>
+            <option value="kyw">कुरमाली (Kurmali)</option>
+            <option value="panch">पंचपरगनिया (Panchpargania)</option>
+            <option value="bho">भोजपुरी (Bhojpuri)</option>
+            <option value="mag">मगही (Magahi)</option>
+            <option value="anp">अंगिका (Angika)</option>
+            <option value="mun">ᱢᱩᱱᱰᱟᱨᱤ / मुण्डारी (Mundari)</option>
+            <option value="hoc">ᱦᱳ / हो (Ho)</option>
+            <option value="khr">खड़िया (Kharia)</option>
+            <option value="kru">कुड़ुख़ (Kurukh / Oraon)</option>
+            <option value="or">ଓଡ଼ିଆ (Odia)</option>
+            <option value="bn">বাংলা (Bengali)</option>
+            <option value="ur">اردو (Urdu)</option>
+          </select>
+        </div>
+
+        <!-- Persistent Role Switcher Dropdown -->
+        <div class="relative">
+          <select id="global-role-switcher" class="h-9 px-2.5 rounded-lg bg-stone-100 hover:bg-stone-200 border border-stone-200 text-slate-800 font-semibold focus:outline-none cursor-pointer text-xs transition-colors" title="Switch User Role Persona">
+            <option value="student">Student / Lab</option>
+            <option value="industry">Industry Partner</option>
+            <option value="citizen">Citizen / Govt</option>
+            <option value="guest">Public Visitor</option>
+          </select>
+        </div>
+
+        <!-- Notification Bell with Dropdown -->
+        <div class="relative">
+          <button type="button" id="notif-bell-btn" class="h-9 w-9 flex items-center justify-center rounded-lg bg-stone-100 hover:bg-stone-200 border border-stone-200 text-slate-600 relative transition-colors" title="Notifications">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path>
+            </svg>
+            <span id="notif-badge" class="absolute -top-1 -right-1 w-4 h-4 rounded-full bg-[#B45309] text-white text-[10px] font-bold flex items-center justify-center">2</span>
+          </button>
+
+          <!-- Dropdown List -->
+          <div id="notif-dropdown" class="notif-dropdown hidden p-3 w-80 max-w-[90vw]">
+            <div class="flex items-center justify-between pb-2 mb-2 border-b border-stone-200">
+              <span class="text-xs font-bold text-slate-800" data-i18n="notificationsTitle">Notifications</span>
+              <button type="button" onclick="markAllNotificationsRead()" class="text-[10px] text-[#1B4942] hover:underline font-semibold" data-i18n="markAllRead">Mark all read</button>
+            </div>
+            <div id="notif-list" class="space-y-2 text-xs max-h-80 overflow-y-auto">
+              <!-- Dynamically populated clickable notification cards via app.js -->
+            </div>
+          </div>
+        </div>
+
+        <!-- Single Dynamic Auth / Profile Entry Point -->
+        <div id="header-auth-container" class="flex items-center">
+          <a href="#/signup?role=student" id="header-signup-btn" class="h-9 inline-flex items-center gap-1.5 px-3.5 rounded-lg text-xs font-semibold bg-[#1B4942] hover:bg-[#153B35] text-white shadow-xs transition-colors">
+            <span>Sign Up</span>
+          </a>
+          <a href="#/profile" id="header-profile-btn" class="hidden h-9 inline-flex items-center gap-2 px-2.5 rounded-lg text-xs font-semibold bg-[#EDF4F0] hover:bg-[#DCEAE3] border border-[#CADED4] text-[#1B4942] transition-colors" title="My Civic Profile">
+            <span id="header-user-avatar" class="w-6 h-6 rounded-full bg-[#1B4942] text-white text-[10px] font-bold flex items-center justify-center">AS</span>
+            <span id="header-user-name" class="font-medium text-slate-900 max-w-[100px] truncate">Dr. Aryan</span>
+            <span class="text-[9px] uppercase font-bold px-1.5 py-0.5 rounded bg-white text-[#1B4942] border border-[#CADED4] hidden sm:inline">Profile</span>
+          </a>
+        </div>
+
+      </div>
+
+    </div>
+  </header>
+
+  <!-- Sticky Offline Notification Banner -->
+  <div id="offline-banner" class="hidden">
+    <div class="max-w-7xl mx-auto flex items-center justify-center gap-2">
+      <svg class="w-4 h-4 text-amber-700 inline flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+      </svg>
+      <span id="offline-banner-text">You're offline &mdash; showing cached data. New actions will be queued and synced automatically when reconnected.</span>
+    </div>
+  </div>
+
+  <!-- Main View Container -->
+  <main class="flex-grow relative z-10">
+
+    <!-- ================================================================= -->
+    <!-- VIEW 1: LANDING PAGE -->
+    <!-- ================================================================= -->
+    <section id="view-landing" class="view-section active">
+
+      <!-- Hero Section -->
+      <div class="relative pt-12 pb-16 md:pt-16 md:pb-20">
+        <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+
+          <!-- Announcement Pill -->
+          <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#EDF4F0] border border-[#CADED4] text-xs text-[#1B4942] mb-6 shadow-xs">
+            <span class="flex h-2 w-2 rounded-full bg-[#2D6A4F]"></span>
+            <span class="font-semibold tracking-wide uppercase text-[11px]">Connecting Civic Need with Campus Brainpower & Industry Capital</span>
+            <span class="text-slate-300">|</span>
+            <span class="text-slate-600 font-medium">National Initiative</span>
+          </div>
+
+          <!-- Platform Name & Bespoke Emblem -->
+          <div class="mb-3 flex items-center justify-center gap-3">
+            <div class="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-[#EDF4F0] border border-[#CADED4] flex items-center justify-center text-[#1B4942] shadow-xs">
+              <svg class="w-7 h-7 sm:w-8 sm:h-8" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <rect x="5" y="7" width="3.5" height="18" rx="1.75" fill="#1B4942" />
+                <rect x="23.5" y="7" width="3.5" height="18" rx="1.75" fill="#1B4942" />
+                <path d="M7 23L24 9" stroke="#2D6A4F" stroke-width="2.75" stroke-linecap="round" />
+                <path d="M18.5 9H24V14.5" stroke="#2D6A4F" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" />
+                <circle cx="15.5" cy="16" r="2.75" fill="#B45309" stroke="#FFFFFF" stroke-width="1.25" />
+              </svg>
+            </div>
+            <span class="font-display text-4xl sm:text-5xl md:text-6xl font-extrabold tracking-tight text-slate-900">
+              NIVARAN
+            </span>
+          </div>
+
+          <!-- Tagline -->
+          <h1 id="hero-tagline-text" class="font-display text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight text-[#1B4942] mb-6">
+            "From Reported to Resolved."
+          </h1>
+
+          <!-- Mission Statement Description -->
+          <div class="max-w-3xl mx-auto mb-8">
+            <p id="hero-mission-desc" class="text-base sm:text-lg text-slate-700 leading-relaxed font-normal">
+              Nivaran turns civic problems into structured challenges, intelligently matches them to the right university expertise, and pairs them with industry backing — so no problem stalls at the idea stage, and no solution is solved just once when it could scale everywhere.
+            </p>
+          </div>
+
+          <!-- Hero CTAs -->
+          <div class="flex flex-col sm:flex-row items-center justify-center gap-4 max-w-md mx-auto mb-14">
+            <!-- Explore Live Challenges Button -->
+            <a id="btn-explore-live-challenges" href="#/challenges" class="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-5 py-3 rounded-xl text-sm font-semibold bg-white hover:bg-stone-50 text-[#1B4942] border border-[#CADED4] shadow-xs">
+              <svg class="w-4 h-4 text-[#2D6A4F]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+              </svg>
+              <span>Explore Live Challenges</span>
+              <span class="text-[10px] bg-[#EDF4F0] text-[#1B4942] border border-[#CADED4] px-1.5 py-0.5 rounded font-semibold">No Login Required</span>
+            </a>
+
+            <!-- Choose Role CTA -->
+            <a id="btn-select-role" href="#roles-section" class="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl text-sm font-semibold bg-[#1B4942] hover:bg-[#153B35] text-white shadow-xs">
+              <span>Select Your Role</span>
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+              </svg>
+            </a>
+          </div>
+
+          <!-- Quick Metrics Bar -->
+          <div class="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-4xl mx-auto pt-8 border-t border-stone-200">
+            <div class="p-4 rounded-xl bg-white border border-stone-200 shadow-xs">
+              <div class="font-display text-2xl font-bold text-slate-900">450+</div>
+              <div class="text-xs text-slate-600 mt-1 font-medium">Civic Issues Structured</div>
+            </div>
+            <div class="p-4 rounded-xl bg-white border border-stone-200 shadow-xs">
+              <div class="font-display text-2xl font-bold text-[#1B4942]">120+</div>
+              <div class="text-xs text-slate-600 mt-1 font-medium">University R&D Labs</div>
+            </div>
+            <div class="p-4 rounded-xl bg-white border border-stone-200 shadow-xs">
+              <div class="font-display text-2xl font-bold text-[#B45309]">₹14.2 Cr</div>
+              <div class="text-xs text-slate-600 mt-1 font-medium">Industry CSR Backing</div>
+            </div>
+            <div class="p-4 rounded-xl bg-white border border-stone-200 shadow-xs">
+              <div class="font-display text-2xl font-bold text-slate-800">84%</div>
+              <div class="text-xs text-slate-600 mt-1 font-medium">Resolution & Pilot Rate</div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Three Large Role Cards Section -->
+      <section id="roles-section" class="py-16 bg-[#F3F2EE] border-t border-b border-stone-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          
+          <div class="text-center max-w-3xl mx-auto mb-12">
+            <span class="text-xs uppercase font-bold tracking-widest text-[#1B4942] bg-[#EDF4F0] border border-[#CADED4] px-3 py-1 rounded-full">
+              Tailored Portals
+            </span>
+            <h2 class="font-display text-3xl font-bold text-slate-900 mt-3 mb-2">
+              Choose Your Role in the Nivaran Ecosystem
+            </h2>
+            <p class="text-slate-600 text-sm">
+              Click a role to launch the role-specific onboarding form.
+            </p>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            
+            <!-- Card 1: University / Student -->
+            <div class="role-card rounded-2xl bg-white border border-stone-200 p-8 flex flex-col justify-between cursor-pointer shadow-xs" data-role="student" role="button" tabindex="0">
+              <div>
+                <div class="flex items-center justify-between mb-6">
+                  <div class="w-14 h-14 rounded-xl bg-[#EDF4F0] border border-[#CADED4] flex items-center justify-center text-[#1B4942]">
+                    <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 14l9-5-9-5-9 5 9 5z"></path>
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z"></path>
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 14v7"></path>
+                    </svg>
+                  </div>
+                  <span class="text-xs font-semibold px-2.5 py-1 rounded-full bg-[#EDF4F0] text-[#1B4942] border border-[#CADED4]">Solvers & Labs</span>
+                </div>
+                <h3 class="font-display text-2xl font-bold text-slate-900 mb-1">University / Student</h3>
+                <p class="text-[#2D6A4F] font-semibold text-sm mb-4">"Solve real-world challenges with your skills"</p>
+                <ul class="space-y-2 text-xs text-slate-600 mb-6">
+                  <li class="flex items-center gap-2">&bull; Turn capstones into verified municipal deployments</li>
+                  <li class="flex items-center gap-2">&bull; Win prototype research grants and cash bounties</li>
+                  <li class="flex items-center gap-2">&bull; Receive direct mentorship from industry architects</li>
+                </ul>
+              </div>
+              <div class="pt-4 border-t border-stone-200 flex items-center justify-between text-sm font-semibold text-[#1B4942]">
+                <span>Sign up as Student / Faculty &rarr;</span>
+              </div>
+            </div>
+
+            <!-- Card 2: Citizen / NGO / Govt -->
+            <div class="role-card rounded-2xl bg-white border border-stone-200 p-8 flex flex-col justify-between cursor-pointer shadow-xs" data-role="citizen" role="button" tabindex="0">
+              <div>
+                <div class="flex items-center justify-between mb-6">
+                  <div class="w-14 h-14 rounded-xl bg-[#FEF7ED] border border-[#FDE68A] flex items-center justify-center text-[#B45309]">
+                    <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5.882V19.24a1.76 1.76 0 01-3.417.592l-2.147-6.15M18 13a3 3 0 100-6M5.436 13.683A4.001 4.001 0 017 6h1.832c4.1 0 7.625-1.234 9.168-3v14c-1.543-1.766-5.067-3-9.168-3H7a3.988 3.988 0 01-1.564-.317z"></path>
+                    </svg>
+                  </div>
+                  <span class="text-xs font-semibold px-2.5 py-1 rounded-full bg-[#FEF7ED] text-[#92400E] border border-[#FDE68A]">Community Voices</span>
+                </div>
+                <h3 class="font-display text-2xl font-bold text-slate-900 mb-1">Citizen / NGO / Govt</h3>
+                <p class="text-[#B45309] font-semibold text-sm mb-4">"Report a problem in your community"</p>
+                <ul class="space-y-2 text-xs text-slate-600 mb-6">
+                  <li class="flex items-center gap-2">&bull; Pinpoint issues with interactive map picker</li>
+                  <li class="flex items-center gap-2">&bull; Automatic duplicate detection & clustering</li>
+                  <li class="flex items-center gap-2">&bull; Track live progress from report to field pilot</li>
+                </ul>
+              </div>
+              <div class="pt-4 border-t border-stone-200 flex items-center justify-between text-sm font-semibold text-[#92400E]">
+                <span>Sign up to Report & Track &rarr;</span>
+              </div>
+            </div>
+
+            <!-- Card 3: Industry -->
+            <div class="role-card rounded-2xl bg-white border border-stone-200 p-8 flex flex-col justify-between cursor-pointer shadow-xs" data-role="industry" role="button" tabindex="0">
+              <div>
+                <div class="flex items-center justify-between mb-6">
+                  <div class="w-14 h-14 rounded-xl bg-[#F0F4F8] border border-[#CBD5E1] flex items-center justify-center text-[#1E3A5F]">
+                    <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
+                    </svg>
+                  </div>
+                  <span class="text-xs font-semibold px-2.5 py-1 rounded-full bg-[#F0F4F8] text-[#1E3A5F] border border-[#CBD5E1]">Sponsors & Scale</span>
+                </div>
+                <h3 class="font-display text-2xl font-bold text-slate-900 mb-1">Industry</h3>
+                <p class="text-[#1E3A5F] font-semibold text-sm mb-4">"Fund, mentor, and scale impactful solutions"</p>
+                <ul class="space-y-2 text-xs text-slate-600 mb-6">
+                  <li class="flex items-center gap-2">&bull; Fulfill statutory CSR requirements with audit files</li>
+                  <li class="flex items-center gap-2">&bull; Co-sponsor university prototypes & field pilots</li>
+                  <li class="flex items-center gap-2">&bull; Recruit pre-vetted student innovators</li>
+                </ul>
+              </div>
+              <div class="pt-4 border-t border-stone-200 flex items-center justify-between text-sm font-semibold text-[#1E3A5F]">
+                <span>Sign up as Industry Partner &rarr;</span>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </section>
+
+      <!-- Engine Workflow Strip -->
+      <section id="workflow-section" class="py-16 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center max-w-3xl mx-auto mb-10">
+          <span class="text-xs uppercase font-bold tracking-widest text-[#1B4942] bg-[#EDF4F0] border border-[#CADED4] px-3 py-1 rounded-full">The Engine</span>
+          <h2 class="font-display text-2xl sm:text-3xl font-bold text-slate-900 mt-3 mb-2">How Nivaran Bridges Problems to Scalable Solutions</h2>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+          <div class="p-5 rounded-xl bg-white border border-stone-200 shadow-xs">
+            <div class="text-xl font-bold text-slate-400 mb-1">01</div>
+            <h4 class="font-bold text-slate-900 text-sm mb-1">Civic Report Logged</h4>
+            <p class="text-xs text-slate-600">Geo-tagged problem statement logged with photos and GPS pin.</p>
+          </div>
+          <div class="p-5 rounded-xl bg-white border border-stone-200 shadow-xs">
+            <div class="text-xl font-bold text-slate-400 mb-1">02</div>
+            <h4 class="font-bold text-slate-900 text-sm mb-1">Duplicate Clustering</h4>
+            <p class="text-xs text-slate-600">Identifies parallel problems across cities to cluster for scale.</p>
+          </div>
+          <div class="p-5 rounded-xl bg-white border border-stone-200 shadow-xs">
+            <div class="text-xl font-bold text-slate-400 mb-1">03</div>
+            <h4 class="font-bold text-slate-900 text-sm mb-1">University Match</h4>
+            <p class="text-xs text-slate-600">Matched to engineering/science labs by AI relevance score.</p>
+          </div>
+          <div class="p-5 rounded-xl bg-white border border-stone-200 shadow-xs">
+            <div class="text-xl font-bold text-slate-400 mb-1">04</div>
+            <h4 class="font-bold text-slate-900 text-sm mb-1">Industry CSR Pilot</h4>
+            <p class="text-xs text-slate-600">Industry funds and mentors prototype to pilot deployment.</p>
+          </div>
+        </div>
+      </section>
+
+    </section>
+
+    <!-- ================================================================= -->
+    <!-- VIEW 2: ROLE-AWARE SIGN UP PAGE WITH MAP PICKER -->
+    <!-- ================================================================= -->
+    <section id="view-signup" class="view-section hidden py-10 md:py-14">
+      <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+        
+        <div class="mb-5">
+          <a href="#/" class="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-600 hover:text-[#1B4942]">
+            &larr; Back to Home
+          </a>
+        </div>
+
+        <div class="rounded-2xl bg-white border border-stone-200 shadow-sm p-6 sm:p-10">
+          
+          <!-- Role Switcher Tabs -->
+          <div class="mb-6">
+            <div class="flex items-center justify-between mb-2">
+              <span class="text-xs font-bold uppercase tracking-wider text-slate-500">Step 1: Select Your Role</span>
+              <span id="active-role-badge" class="badge-civic-teal text-xs font-semibold px-2.5 py-0.5 rounded-full">Selected: University / Student</span>
+            </div>
+
+            <div class="grid grid-cols-3 gap-2 p-1 rounded-xl bg-stone-100 border border-stone-200">
+              <button type="button" class="role-tab flex items-center justify-center py-2 px-2 rounded-lg text-xs font-semibold" data-role-tab="student">
+                University / Student
+              </button>
+              <button type="button" class="role-tab flex items-center justify-center py-2 px-2 rounded-lg text-xs font-semibold" data-role-tab="citizen">
+                Citizen / NGO / Govt
+              </button>
+              <button type="button" class="role-tab flex items-center justify-center py-2 px-2 rounded-lg text-xs font-semibold" data-role-tab="industry">
+                Industry
+              </button>
+            </div>
+          </div>
+
+          <!-- Role Header Banner -->
+          <div id="role-header-info" class="p-4 rounded-xl bg-[#F9F8F6] border border-stone-200 mb-6 flex items-start gap-3">
+            <div id="role-icon-container" class="icon-box-teal w-11 h-11 rounded-xl flex items-center justify-center flex-shrink-0">
+              <!-- Replaced via JS -->
+            </div>
+            <div>
+              <h2 id="role-title-heading" class="font-display font-bold text-base text-slate-900">University & Student Portal</h2>
+              <p id="role-desc-text" class="text-xs text-slate-600 mt-0.5 font-medium">"Solve real-world challenges with your skills"</p>
+            </div>
+          </div>
+
+          <!-- Role-Aware Form -->
+          <form id="signup-form" class="space-y-4">
+            
+            <h3 class="text-xs font-bold uppercase tracking-wider text-slate-500 pb-1 border-b border-stone-200">Common Details</h3>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <div class="flex items-center justify-between mb-1">
+                  <label class="block text-xs font-semibold text-slate-700">Full Name *</label>
+                  <button type="button" class="btn-voice-input py-0.5 px-2 text-[10px]" data-target="signup-fullname" title="Tap to Speak (Voice Input)">
+                    <span class="voice-dot"></span> 🎤 <span class="voice-label">Tap to Speak</span>
+                  </button>
+                </div>
+                <input type="text" id="signup-fullname" name="fullname" required placeholder="••••••••" class="w-full px-3 py-2 rounded-lg bg-white border border-slate-300 text-slate-900 text-xs focus:outline-none focus:border-[#1B4942]" />
+              </div>
+              <div>
+                <label class="block text-xs font-semibold text-slate-700 mb-1">Email Address *</label>
+                <input type="email" name="email" required placeholder="••••••••" class="w-full px-3 py-2 rounded-lg bg-white border border-slate-300 text-slate-900 text-xs focus:outline-none focus:border-[#1B4942]" />
+              </div>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+              <div>
+                <label class="block text-xs font-semibold text-slate-700 mb-1">Age *</label>
+                <input type="number" name="age" min="16" max="100" required placeholder="&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;" class="w-full px-3 py-2 rounded-lg bg-white border border-slate-300 text-slate-900 text-xs focus:outline-none focus:border-[#1B4942]" />
+              </div>
+              <div>
+                <label class="block text-xs font-semibold text-slate-700 mb-1">Gender *</label>
+                <select name="gender" required class="w-full px-3 py-2 rounded-lg bg-white border border-slate-300 text-slate-800 text-xs focus:outline-none focus:border-[#1B4942]">
+                  <option value="">Select Gender</option>
+                  <option value="Male">Male</option>
+                  <option value="Female">Female</option>
+                  <option value="Other">Other</option>
+                  <option value="Prefer not to say">Prefer not to say</option>
+                </select>
+              </div>
+              <div>
+                <label class="block text-xs font-semibold text-slate-700 mb-1">Phone Number *</label>
+                <input type="tel" name="phone" required placeholder="&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;" class="w-full px-3 py-2 rounded-lg bg-white border border-slate-300 text-slate-900 text-xs focus:outline-none focus:border-[#1B4942]" />
+              </div>
+            </div>
+
+            <div>
+              <label class="block text-xs font-semibold text-slate-700 mb-1">Password (Mock) *</label>
+              <input type="password" name="password" required placeholder="&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;" class="w-full px-3 py-2 rounded-lg bg-white border border-slate-300 text-slate-900 text-xs focus:outline-none focus:border-[#1B4942]" />
+            </div>
+
+            <!-- Dynamic Role Specific Section -->
+            <div class="pt-3 border-t border-stone-200">
+              <h3 class="text-xs font-bold uppercase tracking-wider text-slate-500 pb-2">Role Specific Credentials</h3>
+              <div id="dynamic-role-fields" class="space-y-4">
+                <!-- Injected via app.js with conditional Leaflet map for Citizen/NGO/Govt -->
+              </div>
+            </div>
+
+            <button type="submit" id="submit-signup-btn" class="btn-civic-teal w-full py-3 px-6 rounded-xl font-semibold text-xs shadow-xs transition-all flex items-center justify-center gap-2 mt-4">
+              <span id="submit-btn-text">Complete Registration & Enter Portal</span>
+              <span>&rarr;</span>
+            </button>
+
+          </form>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ================================================================= -->
+    <!-- VIEW: DEDICATED USER PROFILE & CREDENTIALS -->
+    <!-- ================================================================= -->
+    <section id="view-profile" class="view-section hidden py-8 md:py-12">
+      <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+        
+        <!-- Top Breadcrumb & Actions Bar -->
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-6 pb-4 border-b border-stone-200">
+          <div class="flex items-center gap-2 text-xs text-slate-500">
+            <a href="#/" class="hover:text-[#1B4942] font-semibold flex items-center gap-1">
+              &larr; Home
+            </a>
+            <span>/</span>
+            <span class="text-slate-900 font-medium">My Civic Profile</span>
+          </div>
+
+          <div class="flex items-center gap-2.5">
+            <button type="button" id="btn-toggle-edit-profile" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold bg-white border border-stone-200 text-slate-700 hover:bg-stone-100 hover:text-slate-900 shadow-xs transition-colors">
+              <svg class="w-3.5 h-3.5 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
+              <span id="edit-profile-btn-label">Edit Profile</span>
+            </button>
+            <button type="button" id="btn-reset-demo-account" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold bg-stone-100 border border-stone-200 text-slate-600 hover:bg-rose-50 hover:border-rose-200 hover:text-rose-700 shadow-xs transition-colors" title="Switch account or test sign up again">
+              <svg class="w-3.5 h-3.5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/></svg>
+              <span>Switch / Log Out</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Main Profile Grid -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          
+          <!-- Column 1: Identity & Key Demographics -->
+          <div class="space-y-6">
+            <div class="rounded-2xl bg-white border border-stone-200 p-6 shadow-xs text-center">
+              <div class="relative inline-block mb-3">
+                <div id="profile-avatar-circle" class="w-20 h-20 rounded-2xl bg-[#1B4942] text-white font-display font-bold text-2xl flex items-center justify-center mx-auto shadow-sm">
+                  AS
+                </div>
+                <span class="absolute -bottom-1 -right-1 w-5 h-5 rounded-full bg-emerald-500 border-2 border-white flex items-center justify-center text-white text-[10px]" title="Verified Account">&check;</span>
+              </div>
+              <h2 id="profile-display-name" class="font-display font-bold text-lg text-slate-900">Dr. Aryan Sharma</h2>
+              <div class="mt-1.5 flex items-center justify-center gap-1.5">
+                <span id="profile-role-badge" class="badge-civic-teal text-[11px] font-semibold px-2.5 py-0.5 rounded-full">University / Student</span>
+              </div>
+              <p id="profile-institution-subtitle" class="text-xs text-slate-500 mt-2 font-medium">Birla Institute of Technology (BIT) Mesra, Ranchi</p>
+              
+              <div class="mt-5 pt-4 border-t border-stone-100 flex items-center justify-around text-center text-xs">
+                <div>
+                  <span class="block font-bold text-slate-900" id="profile-stat-challenges">2</span>
+                  <span class="text-[10px] text-slate-400 uppercase font-semibold">Active Solves</span>
+                </div>
+                <div class="w-px h-6 bg-stone-200"></div>
+                <div>
+                  <span class="block font-bold text-[#1B4942]" id="profile-stat-impact">96/100</span>
+                  <span class="text-[10px] text-slate-400 uppercase font-semibold">Impact Score</span>
+                </div>
+                <div class="w-px h-6 bg-stone-200"></div>
+                <div>
+                  <span class="block font-bold text-[#B45309]" id="profile-stat-badges">3</span>
+                  <span class="text-[10px] text-slate-400 uppercase font-semibold">Honors</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Contact & Personal Identity Details -->
+            <div class="rounded-2xl bg-white border border-stone-200 p-5 shadow-xs text-xs space-y-3">
+              <h3 class="font-bold text-slate-800 uppercase tracking-wider text-[11px] pb-2 border-b border-stone-100">Contact & Demographics</h3>
+              <div class="flex items-center justify-between">
+                <span class="text-slate-500">Email:</span>
+                <span class="font-semibold text-slate-800 text-right truncate max-w-[170px]" id="profile-email">aryan.sharma@bitmesra.ac.in</span>
+              </div>
+              <div class="flex items-center justify-between">
+                <span class="text-slate-500">Phone:</span>
+                <span class="font-semibold text-slate-800" id="profile-phone">+91 98765 43210</span>
+              </div>
+              <div class="flex items-center justify-between">
+                <span class="text-slate-500">Age & Gender:</span>
+                <span class="font-semibold text-slate-800" id="profile-age-gender">28 yrs • Male</span>
+              </div>
+              <div class="flex items-center justify-between">
+                <span class="text-slate-500">National Status:</span>
+                <span class="inline-flex items-center gap-1 font-semibold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200 text-[10px]">
+                  <span>Verified Contributor</span> &check;
+                </span>
+              </div>
+              <div class="flex items-center justify-between pt-1 border-t border-stone-100">
+                <span class="text-slate-500">Registered On:</span>
+                <span class="text-slate-600 font-medium" id="profile-registered-date">September 2026</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Column 2 & 3: Role-Specific Details & Engagements -->
+          <div class="lg:col-span-2 space-y-6">
+            
+            <!-- View Mode: Role-Specific Cards -->
+            <div id="profile-view-mode" class="space-y-6">
+              
+              <!-- Role Specific Credentials Card -->
+              <div class="rounded-2xl bg-white border border-stone-200 p-6 shadow-xs">
+                <div class="flex items-center justify-between pb-3 mb-4 border-b border-stone-200">
+                  <div class="flex items-center gap-2">
+                    <span class="text-base" id="profile-role-icon"></span>
+                    <h3 class="font-display font-bold text-sm text-slate-900" id="profile-credentials-heading">University & Research Credentials</h3>
+                  </div>
+                  <span class="text-[11px] text-slate-400 font-medium">Verified Profile Record</span>
+                </div>
+
+                <div id="profile-role-details-container" class="space-y-4">
+                  <!-- Populated dynamically via renderUserProfile() -->
+                </div>
+              </div>
+
+              <!-- Active Civic Engagements & Matched Challenges Card -->
+              <div class="rounded-2xl bg-white border border-stone-200 p-6 shadow-xs">
+                <div class="flex items-center justify-between pb-3 mb-4 border-b border-stone-200">
+                  <div>
+                    <h3 class="font-display font-bold text-sm text-slate-900">Active Engagements & National Impact</h3>
+                    <p class="text-[11px] text-slate-500">Live challenges, prototypes, and institutional collaborations.</p>
+                  </div>
+                  <a href="#/challenges" class="text-xs font-semibold text-[#1B4942] hover:underline flex items-center gap-1">
+                    <span>Explore All</span> &rarr;
+                  </a>
+                </div>
+
+                <div id="profile-engagements-list" class="space-y-3">
+                  <!-- Populated dynamically via renderUserProfile() -->
+                </div>
+              </div>
+
+            </div>
+
+            <!-- Edit Mode: Inline Form -->
+            <div id="profile-edit-mode" class="hidden rounded-2xl bg-white border border-[#CADED4] p-6 shadow-sm">
+              <div class="flex items-center justify-between pb-3 mb-4 border-b border-stone-200">
+                <div>
+                  <h3 class="font-display font-bold text-base text-slate-900">Edit Profile Details</h3>
+                  <p class="text-xs text-slate-500 mt-0.5">Update contact information, credentials, and expertise tags.</p>
+                </div>
+                <button type="button" id="btn-cancel-profile-edit" class="text-xs text-slate-500 hover:text-slate-800 font-semibold px-2 py-1 rounded hover:bg-stone-100">
+                  Cancel
+                </button>
+              </div>
+
+              <form id="profile-edit-form" class="space-y-4">
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div>
+                    <label class="block text-xs font-semibold text-slate-700 mb-1">Full Name *</label>
+                    <input type="text" id="edit-fullname" name="fullname" required class="w-full px-3 py-2 rounded-lg bg-white border border-slate-300 text-slate-900 text-xs focus:outline-none focus:border-[#1B4942]" />
+                  </div>
+                  <div>
+                    <label class="block text-xs font-semibold text-slate-700 mb-1">Email Address *</label>
+                    <input type="email" id="edit-email" name="email" required class="w-full px-3 py-2 rounded-lg bg-white border border-slate-300 text-slate-900 text-xs focus:outline-none focus:border-[#1B4942]" />
+                  </div>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                  <div>
+                    <label class="block text-xs font-semibold text-slate-700 mb-1">Phone Number *</label>
+                    <input type="tel" id="edit-phone" name="phone" required class="w-full px-3 py-2 rounded-lg bg-white border border-slate-300 text-slate-900 text-xs focus:outline-none focus:border-[#1B4942]" />
+                  </div>
+                  <div>
+                    <label class="block text-xs font-semibold text-slate-700 mb-1">Age *</label>
+                    <input type="number" id="edit-age" name="age" min="16" max="100" required class="w-full px-3 py-2 rounded-lg bg-white border border-slate-300 text-slate-900 text-xs focus:outline-none focus:border-[#1B4942]" />
+                  </div>
+                  <div>
+                    <label class="block text-xs font-semibold text-slate-700 mb-1">Gender *</label>
+                    <select id="edit-gender" name="gender" class="w-full px-3 py-2 rounded-lg bg-white border border-slate-300 text-slate-800 text-xs focus:outline-none focus:border-[#1B4942]">
+                      <option value="Male">Male</option>
+                      <option value="Female">Female</option>
+                      <option value="Other">Other</option>
+                      <option value="Prefer not to say">Prefer not to say</option>
+                    </select>
+                  </div>
+                </div>
+
+                <!-- Dynamic Edit Fields per role -->
+                <div id="dynamic-edit-role-fields" class="pt-2 border-t border-stone-200 space-y-4">
+                  <!-- Injected via app.js based on role -->
+                </div>
+
+                <div class="pt-4 border-t border-stone-200 flex items-center justify-end gap-3">
+                  <button type="button" id="btn-cancel-profile-edit-2" class="px-4 py-2 rounded-lg text-xs font-semibold text-slate-600 hover:bg-stone-100">Cancel</button>
+                  <button type="submit" class="btn-civic-teal px-5 py-2 rounded-lg text-xs font-semibold text-white shadow-xs">Save Changes</button>
+                </div>
+              </form>
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ================================================================= -->
+    <!-- VIEW 3: POST A CHALLENGE (CITIZEN / NGO / GOVT FLOW) -->
+    <!-- ================================================================= -->
+    <section id="view-post-challenge" class="view-section hidden py-10 md:py-14">
+      <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+        
+        <div class="mb-5 flex items-center justify-between">
+          <a href="#/challenges" class="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-600 hover:text-[#1B4942]">
+            &larr; Back to Challenges
+          </a>
+          <span class="text-xs px-2.5 py-1 rounded bg-[#FEF7ED] text-[#92400E] border border-[#FDE68A] font-semibold">
+            Civic Problem Submission
+          </span>
+        </div>
+
+        <div class="rounded-2xl bg-white border border-stone-200 shadow-sm p-6 sm:p-10">
+          
+          <div class="mb-6 pb-4 border-b border-stone-200">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+              <div>
+                <h1 id="post-page-heading" class="font-display text-2xl font-bold text-slate-900" data-i18n="postChallengeHeading">Post a Community Challenge</h1>
+                <p id="post-page-subheading" class="text-xs text-slate-600 mt-1" data-i18n="postChallengeDesc">
+                  Submit your localized issue with coordinates. Our engine checks for duplicate problems across Jharkhand to cluster solutions for statewide impact.
+                </p>
+              </div>
+              <button type="button" id="btn-start-guided-voice" onclick="startGuidedVoiceFlow()" class="px-4 py-2.5 rounded-xl text-xs font-bold bg-[#1B4942] hover:bg-[#153B35] text-white shadow-xs flex items-center gap-2 transition-all shrink-0">
+                <span class="text-sm">🎙️</span>
+                <span data-i18n="guidedVoiceBtn">Guided Voice-Fill (बोलकर फॉर्म भरें)</span>
+              </button>
+            </div>
+
+            <!-- Edit Mode Banner (Hidden by default, shown when editing) -->
+            <div id="post-edit-banner" class="hidden mt-4 p-3.5 rounded-xl bg-amber-50 border border-amber-300 text-amber-900 text-xs flex items-center justify-between gap-2">
+              <div class="flex items-center gap-2">
+                <span class="font-bold">✏️ Editing Active Submission:</span>
+                <span id="post-edit-id-label" class="font-mono font-bold bg-white px-2 py-0.5 rounded border border-amber-200">#NIV-401</span>
+                <span>Update fields and save your modifications live.</span>
+              </div>
+              <button type="button" onclick="cancelEditChallenge()" class="px-3 py-1 rounded bg-white hover:bg-amber-100 text-amber-900 border border-amber-300 text-[11px] font-semibold">
+                Cancel Edit
+              </button>
+            </div>
+          </div>
+
+          <!-- Guided Voice-Fill Interactive Wizard -->
+          <div id="guided-voice-wizard" class="hidden mb-6 p-6 rounded-2xl guided-voice-modal border border-[#2D6A4F] shadow-lg transition-all">
+            <div class="flex items-center justify-between mb-3 border-b border-emerald-700/40 pb-2">
+              <div class="flex items-center gap-2">
+                <span class="px-2 py-0.5 rounded bg-emerald-800 text-[11px] font-bold tracking-wider text-emerald-200 uppercase">Voice AI Assistant</span>
+                <span id="voice-wizard-step-badge" class="text-xs font-bold text-emerald-300">Step 1 of 5</span>
+              </div>
+              <button type="button" onclick="closeGuidedVoiceWizard()" class="text-emerald-200 hover:text-white text-lg font-bold">&times;</button>
+            </div>
+
+            <div class="mb-4">
+              <h3 id="voice-wizard-prompt" class="text-base sm:text-lg font-bold text-white mb-1">
+                "What is the title of the civic problem?"
+              </h3>
+              <p id="voice-wizard-hint" class="text-xs text-emerald-200">
+                Speak clearly. We will transcribe your spoken answer directly into the Challenge Title field.
+              </p>
+            </div>
+
+            <!-- Animated Voice Activity & Transcript Preview -->
+            <div class="p-3.5 rounded-xl bg-emerald-950/60 border border-emerald-600/40 mb-4 min-h-[64px] flex items-center gap-3">
+              <div class="flex items-center gap-1 shrink-0">
+                <span class="voice-wave-bar"></span>
+                <span class="voice-wave-bar"></span>
+                <span class="voice-wave-bar"></span>
+                <span class="voice-wave-bar"></span>
+                <span class="voice-wave-bar"></span>
+              </div>
+              <div class="flex-grow">
+                <div class="text-[10px] uppercase font-bold text-emerald-300 tracking-wider">Live Voice Transcript:</div>
+                <div id="voice-wizard-transcript" class="text-xs text-white font-medium italic mt-0.5">
+                  Listening... Speak your answer now.
+                </div>
+              </div>
+            </div>
+
+            <!-- Guided Controls -->
+            <div class="flex flex-wrap items-center justify-between gap-2">
+              <div class="flex items-center gap-2">
+                <button type="button" id="btn-voice-wizard-speak" onclick="triggerWizardActiveListening()" class="px-3.5 py-1.5 rounded-lg text-xs font-bold bg-emerald-500 hover:bg-emerald-400 text-slate-950 flex items-center gap-1">
+                  <span>🎤 Speak Now</span>
+                </button>
+                <button type="button" onclick="repeatWizardPrompt()" class="px-3 py-1.5 rounded-lg text-xs font-semibold bg-emerald-900/80 hover:bg-emerald-800 text-emerald-100">
+                  <span>🔊 Repeat Question</span>
+                </button>
+              </div>
+              <div class="flex items-center gap-2">
+                <button type="button" id="btn-voice-wizard-prev" onclick="prevVoiceWizardStep()" class="px-3 py-1.5 rounded-lg text-xs font-semibold bg-emerald-900/60 hover:bg-emerald-800 text-emerald-200">
+                  &larr; Previous
+                </button>
+                <button type="button" id="btn-voice-wizard-next" onclick="nextVoiceWizardStep()" class="px-4 py-1.5 rounded-lg text-xs font-bold bg-white hover:bg-emerald-50 text-[#1B4942] shadow-xs">
+                  Next Step &rarr;
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Highlighted In-Form Cluster Confirmation Card (Rendered upon duplicate detection) -->
+          <div id="post-cluster-confirmation" class="hidden mb-6 p-6 rounded-2xl bg-gradient-to-br from-[#FEF7ED] via-[#FFFBEB] to-[#EDF4F0] border-2 border-[#B45309] shadow-sm transition-all">
+            <!-- Dynamic cluster confirmation content injected here -->
+          </div>
+
+          <form id="post-challenge-form" class="space-y-5">
+            <input type="hidden" id="post-editing-challenge-id" value="" />
+            
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label class="block text-xs font-semibold text-slate-700 mb-1.5" data-i18n="domainCategoryLabel">Domain / Category *</label>
+                <select id="post-domain" name="domain" required class="w-full px-3 py-2.5 rounded-lg bg-white border border-slate-300 text-slate-800 text-xs focus:outline-none focus:border-[#1B4942]">
+                  <option value="Healthcare">Healthcare</option>
+                  <option value="Cleanliness & Sanitation">Cleanliness & Sanitation</option>
+                  <option value="Women Safety">Women Safety</option>
+                  <option value="Street Lighting">Street Lighting</option>
+                  <option value="Water Shortage" selected>Water Shortage</option>
+                  <option value="Electricity Cuts">Electricity Cuts</option>
+                  <option value="Education">Education</option>
+                  <option value="Agriculture & Farming">Agriculture & Farming</option>
+                  <option value="Environment & Pollution">Environment & Pollution</option>
+                  <option value="Infrastructure & Roads">Infrastructure & Roads</option>
+                  <option value="Public Transport">Public Transport</option>
+                  <option value="Waste Management">Waste Management</option>
+                  <option value="Disaster Management">Disaster Management</option>
+                  <option value="Employment & Livelihood">Employment & Livelihood</option>
+                  <option value="Digital Literacy">Digital Literacy</option>
+                  <option value="Elderly & Disabled Care">Elderly & Disabled Care</option>
+                  <option value="Child Welfare">Child Welfare</option>
+                  <option value="Other">Other</option>
+                </select>
+              </div>
+
+              <div>
+                <div class="flex items-center justify-between mb-1.5">
+                  <label class="block text-xs font-semibold text-slate-700" data-i18n="challengeTitleLabel">Challenge Title *</label>
+                  <button type="button" class="btn-voice-input py-0.5 px-2 text-[10px]" data-target="post-title" title="Tap to Speak (Voice Input)">
+                    <span class="voice-dot"></span> 🎤 <span class="voice-label" data-i18n="tapToSpeak">Tap to Speak</span>
+                  </button>
+                </div>
+                <input type="text" id="post-title" name="title" required placeholder="e.g. Silt Clogging in Stormwater Feeder Drain" data-i18n-placeholder="postTitlePlaceholder" class="w-full px-3 py-2.5 rounded-lg bg-white border border-slate-300 text-slate-900 text-xs focus:outline-none focus:border-[#1B4942]" />
+              </div>
+            </div>
+
+            <!-- New Field: Estimated People Affected -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <div class="flex items-center justify-between mb-1.5">
+                  <label class="block text-xs font-semibold text-slate-700" data-i18n="peopleAffectedLabel">Estimated People Impacted / Affected *</label>
+                  <button type="button" class="btn-voice-input py-0.5 px-2 text-[10px]" data-target="post-people-affected" title="Tap to Speak">
+                    <span class="voice-dot"></span> 🎤 <span class="voice-label" data-i18n="tapToSpeak">Tap to Speak</span>
+                  </button>
+                </div>
+                <div class="flex gap-2">
+                  <input type="text" id="post-people-affected" name="peopleAffected" required value="45,000 residents" placeholder="e.g. 45,000 residents" data-i18n-placeholder="peopleAffectedPlaceholder" class="flex-grow px-3 py-2.5 rounded-lg bg-white border border-slate-300 text-slate-900 text-xs focus:outline-none focus:border-[#1B4942]" />
+                  <button type="button" onclick="autoEstimatePeopleAffected()" class="px-2.5 py-2 text-[11px] font-semibold bg-stone-100 hover:bg-stone-200 text-slate-700 rounded-lg border border-stone-300 shrink-0" title="Estimate from Jharkhand municipal ward census data" data-i18n="autoEstimateBtn">
+                    Auto-Estimate
+                  </button>
+                </div>
+              </div>
+
+              <div>
+                <label class="block text-xs font-semibold text-slate-700 mb-1.5" data-i18n="jharkhandDistrictLabel">Jharkhand District / Urban Area *</label>
+                <select id="post-district-select" name="district" onchange="handlePostDistrictChange(this.value)" class="w-full px-3 py-2.5 rounded-lg bg-white border border-slate-300 text-slate-800 text-xs focus:outline-none focus:border-[#1B4942]">
+                  <option value="Ranchi" selected>Ranchi (South Chotanagpur)</option>
+                  <option value="Dhanbad">Dhanbad (North Chotanagpur)</option>
+                  <option value="East Singhbhum">East Singhbhum / Jamshedpur (Kolhan)</option>
+                  <option value="Bokaro">Bokaro Steel City (North Chotanagpur)</option>
+                  <option value="Hazaribagh">Hazaribagh (North Chotanagpur)</option>
+                  <option value="Deoghar">Deoghar (Santhal Pargana)</option>
+                  <option value="Dumka">Dumka (Santhal Pargana)</option>
+                  <option value="Giridih">Giridih (North Chotanagpur)</option>
+                  <option value="Palamu">Palamu / Medininagar (Palamu)</option>
+                  <option value="West Singhbhum">West Singhbhum / Chaibasa (Kolhan)</option>
+                  <option value="Ramgarh">Ramgarh (North Chotanagpur)</option>
+                  <option value="Godda">Godda (Santhal Pargana)</option>
+                  <option value="Chatra">Chatra (North Chotanagpur)</option>
+                </select>
+              </div>
+            </div>
+
+            <div>
+              <div class="flex items-center justify-between mb-1.5">
+                <label class="block text-xs font-semibold text-slate-700" data-i18n="descriptionLabel">Detailed Description *</label>
+                <button type="button" class="btn-voice-input py-0.5 px-2 text-[10px]" data-target="post-description" title="Tap to Speak (Voice Input)">
+                  <span class="voice-dot"></span> 🎤 <span class="voice-label" data-i18n="tapToSpeak">Tap to Speak</span>
+                </button>
+              </div>
+              <textarea id="post-description" name="description" rows="4" required placeholder="Describe the civic problem, affected area, and urgency in detail..." data-i18n-placeholder="descriptionPlaceholder" class="w-full px-3 py-2 rounded-lg bg-white border border-slate-300 text-slate-900 text-xs focus:outline-none focus:border-[#1B4942]"></textarea>
+            </div>
+
+            <!-- Location with Leaflet Map Picker -->
+            <div>
+              <div class="flex items-center justify-between mb-1.5">
+                <label class="block text-xs font-semibold text-slate-700">Problem Location (Drop Pin or Use GPS) *</label>
+                <button type="button" id="btn-post-gps" class="text-[11px] font-semibold text-[#1B4942] hover:underline flex items-center gap-1">
+                  <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
+                  </svg>
+                  <span>Use My Current Location</span>
+                </button>
+              </div>
+
+              <!-- Map Container -->
+              <div id="map-post" class="map-container mb-2"></div>
+              
+              <!-- Address Display and Coordinates -->
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
+                <div>
+                  <span class="text-slate-500 text-[10px]">Resolved Address:</span>
+                  <input type="text" id="post-address" name="address" readonly class="w-full px-2.5 py-1.5 rounded bg-stone-50 border border-slate-200 text-slate-700 text-xs" value="Harmu River Feeder, Ranchi, Jharkhand" />
+                </div>
+                <div>
+                  <span class="text-slate-500 text-[10px]">Coordinates:</span>
+                  <input type="text" id="post-coords" name="coords" readonly class="w-full px-2.5 py-1.5 rounded bg-stone-50 border border-slate-200 text-slate-700 text-xs font-mono" value="23.3569&deg; N, 85.3240&deg; E" />
+                </div>
+              </div>
+            </div>
+
+            <!-- Media Upload Mock -->
+            <div>
+              <label class="block text-xs font-semibold text-slate-700 mb-1.5">Upload Photos / Inspection Videos (Optional)</label>
+              <div class="border-2 border-dashed border-slate-300 rounded-xl p-4 text-center bg-stone-50 hover:bg-stone-100 transition-colors cursor-pointer" id="mock-upload-box">
+                <svg class="w-8 h-8 text-slate-400 mx-auto mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                </svg>
+                <p class="text-xs text-slate-600 font-medium">Click to upload photos, geo-tagged mobile media or site inspection video</p>
+                <p class="text-[10px] text-slate-400 mt-0.5">JPG, PNG, MP4 up to 50MB (Mock File Uploader)</p>
+                <div id="mock-upload-preview" class="hidden mt-2 text-xs font-semibold text-[#1B4942]">2 site inspection photos attached</div>
+              </div>
+            </div>
+
+            <!-- Submit Button -->
+            <button type="submit" class="btn-civic-amber w-full py-3 px-6 rounded-xl font-semibold text-xs shadow-xs transition-all flex items-center justify-center gap-2">
+              <span>Submit Challenge to Public Platform</span>
+              <span>&rarr;</span>
+            </button>
+
+          </form>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ================================================================= -->
+    <!-- VIEW 4: CHALLENGE LISTING (AI-MATCHED & MAP VIEW) -->
+    <!-- ================================================================= -->
+    <section id="view-challenges" class="view-section hidden py-8 md:py-12">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        
+        <!-- Header Banner -->
+        <div class="rounded-2xl bg-white border border-stone-200 p-6 md:p-8 mb-6 shadow-xs flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+          <div>
+            <div class="flex items-center gap-2 mb-2">
+              <span id="role-listing-badge" class="badge-civic-teal text-xs font-semibold px-2.5 py-0.5 rounded-full">
+                AI Match Active: University Profile
+              </span>
+              <span class="text-xs text-slate-500 font-medium">• Sorted by Relevance</span>
+            </div>
+            <h1 class="font-display text-2xl font-bold text-slate-900" data-i18n="activeChallengesHeading">Active Civic Challenges</h1>
+            <p class="text-xs text-slate-600 mt-1 max-w-2xl" data-i18n="activeChallengesDesc">
+              Showing challenges scored against your profile expertise. University teams can apply to solve, and industry partners can adopt to sponsor.
+            </p>
+          </div>
+
+          <!-- Controls: Post Button & View Switcher -->
+          <div class="flex items-center gap-2.5 flex-wrap">
+            <div class="inline-flex rounded-lg border border-slate-300 p-0.5 bg-stone-100 text-xs font-semibold">
+              <button type="button" id="btn-view-grid" class="px-3 py-1.5 rounded-md bg-white text-slate-900 shadow-2xs" data-i18n="gridViewBtn">Grid View</button>
+              <button type="button" id="btn-view-map" class="px-3 py-1.5 rounded-md text-slate-600 hover:text-slate-900" data-i18n="mapViewBtn">Map View</button>
+            </div>
+            <a href="#/post-challenge" class="px-3.5 py-2 rounded-lg text-xs font-semibold bg-[#B45309] hover:bg-[#92400E] text-white flex items-center gap-1.5 shadow-xs">
+              <span data-i18n="postChallengeBtn">+ Post Challenge</span>
+            </a>
+          </div>
+        </div>
+
+        <!-- Filter & Search Controls -->
+        <div class="bg-white rounded-2xl border border-stone-200 p-4 mb-6 shadow-xs">
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3">
+            
+            <div class="relative lg:col-span-1">
+              <input type="text" id="challenge-search-input" placeholder="Search title, city, keyword..." data-i18n-placeholder="searchPlaceholder" class="w-full pl-8 pr-16 py-2 rounded-lg bg-[#F9F8F6] border border-slate-300 text-slate-900 placeholder-slate-400 text-xs focus:outline-none focus:border-[#1B4942]" />
+              <svg class="w-4 h-4 absolute left-2.5 top-1/2 -translate-y-1/2 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+              </svg>
+              <button type="button" class="btn-voice-input absolute right-1.5 top-1/2 -translate-y-1/2 py-0.5 px-1.5 text-[10px]" data-target="challenge-search-input" title="Tap to Speak (Voice Search)">
+                <span class="voice-dot"></span> 🎤
+              </button>
+            </div>
+
+            <div>
+              <select id="category-filter" class="w-full px-3 py-2 rounded-lg bg-[#F9F8F6] border border-slate-300 text-slate-800 text-xs focus:outline-none focus:border-[#1B4942]">
+                <option value="all" data-i18n="filterAllDomains">All Domains (18)</option>
+                <option value="Healthcare">Healthcare</option>
+                <option value="Cleanliness & Sanitation">Cleanliness & Sanitation</option>
+                <option value="Women Safety">Women Safety</option>
+                <option value="Street Lighting">Street Lighting</option>
+                <option value="Water Shortage">Water Shortage</option>
+                <option value="Electricity Cuts">Electricity Cuts</option>
+                <option value="Education">Education</option>
+                <option value="Agriculture & Farming">Agriculture & Farming</option>
+                <option value="Environment & Pollution">Environment & Pollution</option>
+                <option value="Infrastructure & Roads">Infrastructure & Roads</option>
+                <option value="Public Transport">Public Transport</option>
+                <option value="Waste Management">Waste Management</option>
+                <option value="Disaster Management">Disaster Management</option>
+                <option value="Employment & Livelihood">Employment & Livelihood</option>
+                <option value="Digital Literacy">Digital Literacy</option>
+                <option value="Elderly & Disabled Care">Elderly & Disabled Care</option>
+                <option value="Child Welfare">Child Welfare</option>
+                <option value="Other">Other</option>
+              </select>
+            </div>
+
+            <div>
+              <select id="match-filter" class="w-full px-3 py-2 rounded-lg bg-[#F9F8F6] border border-slate-300 text-slate-800 text-xs focus:outline-none focus:border-[#1B4942]">
+                <option value="all" data-i18n="anyMatchFilter">Any Match %</option>
+                <option value="90">90%+ High Match Only</option>
+                <option value="75">75%+ Good Match</option>
+              </select>
+            </div>
+
+            <div>
+              <select id="status-filter" class="w-full px-3 py-2 rounded-lg bg-[#F9F8F6] border border-slate-300 text-slate-800 text-xs focus:outline-none focus:border-[#1B4942]">
+                <option value="all" data-i18n="allStatusesFilter">All Statuses</option>
+                <option value="Open">Open for Bids</option>
+                <option value="Matched">University Matched</option>
+                <option value="In Progress">In Progress (Workspace)</option>
+                <option value="Piloted">Field Piloting</option>
+                <option value="Deployed">Deployed & Scaled</option>
+              </select>
+            </div>
+
+            <div>
+              <select id="sort-filter" class="w-full px-3 py-2 rounded-lg bg-[#F9F8F6] border border-slate-300 text-slate-800 text-xs focus:outline-none focus:border-[#1B4942] font-semibold text-[#1B4942]">
+                <option value="priority" selected data-i18n="priorityScoreSort">Priority Score (Default)</option>
+                <option value="match">AI Relevance Match %</option>
+                <option value="upvotes">Highest Upvotes</option>
+                <option value="newest">Newest Reports</option>
+              </select>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Full Country Map Container (Hidden by default, shown in Map View) -->
+        <div id="all-challenges-map-wrapper" class="hidden mb-6">
+          <div class="p-4 bg-white rounded-2xl border border-stone-200 shadow-xs">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between mb-3 px-1 gap-2">
+              <div>
+                <span class="text-xs font-bold text-slate-900" data-i18n="geoDistributionTitle">Geographic Challenge Distribution Across Jharkhand</span>
+                <span class="text-[11px] text-slate-500 block sm:inline sm:ml-2" data-i18n="geoDistributionSubtitle">&bull; Multi-District Density & Clustered Corridors</span>
+              </div>
+              
+              <!-- Map Mode Switcher: Pins vs Heat Map -->
+              <div class="flex items-center gap-1.5 bg-stone-100 p-1 rounded-lg border border-stone-200 shrink-0">
+                <button type="button" id="btn-map-pins" onclick="setChallengeMapMode('pins')" class="px-2.5 py-1 rounded-md text-xs font-semibold bg-white text-slate-900 shadow-2xs transition-all flex items-center gap-1">
+                  <span>📍 Pins View</span>
+                </button>
+                <button type="button" id="btn-map-heat" onclick="setChallengeMapMode('heatmap')" class="px-2.5 py-1 rounded-md text-xs font-semibold text-slate-600 hover:text-slate-900 transition-all flex items-center gap-1">
+                  <span>🔥 Problem Density Heat Map</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- Heat Map District Density Legend (Shown in heat mode) -->
+            <div id="map-heat-legend" class="hidden mb-2.5 p-2 rounded-xl bg-stone-50 border border-stone-200 text-[11px] flex flex-wrap items-center justify-between gap-2">
+              <span class="font-bold text-slate-700">Jharkhand District Density Roster:</span>
+              <div class="flex items-center gap-2">
+                <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold density-badge-high">
+                  <span class="w-2 h-2 rounded-full bg-red-600"></span> High Density (3+ Problems)
+                </span>
+                <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold density-badge-med">
+                  <span class="w-2 h-2 rounded-full bg-amber-500"></span> Medium Density (2 Problems)
+                </span>
+                <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold density-badge-low">
+                  <span class="w-2 h-2 rounded-full bg-emerald-600"></span> Emerging (1 Problem)
+                </span>
+              </div>
+              <span class="text-slate-500 italic">Hover any hotspot for area summary & affected residents</span>
+            </div>
+
+            <div id="map-all-challenges" class="map-container-lg"></div>
+          </div>
+        </div>
+
+        <!-- Counter -->
+        <div class="flex items-center justify-between mb-4">
+          <span id="challenge-count-text" class="text-xs font-medium text-slate-600">Showing 8 active civic challenges</span>
+          <span class="text-xs text-slate-500">Tip: Click any card to inspect details and clustered cases</span>
+        </div>
+
+        <!-- Challenges Grid -->
+        <div id="challenges-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <!-- Injected via app.js -->
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ================================================================= -->
+    <!-- VIEW 5: CHALLENGE DETAIL PAGE -->
+    <!-- ================================================================= -->
+    <section id="view-challenge-detail" class="view-section hidden py-8 md:py-12">
+      <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+        
+        <div class="mb-4">
+          <a href="#/challenges" class="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-600 hover:text-[#1B4942]">
+            &larr; Back to Challenges
+          </a>
+        </div>
+
+        <div id="challenge-detail-content" class="space-y-6">
+          <!-- Injected via app.js -->
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ================================================================= -->
+    <!-- VIEW 6: COLLABORATIVE WORKSPACE -->
+    <!-- ================================================================= -->
+    <section id="view-workspace" class="view-section hidden py-8 md:py-12">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        
+        <!-- Workspace Header Banner -->
+        <div class="rounded-2xl bg-white border border-stone-200 p-6 mb-6 shadow-xs flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+          <div>
+            <div class="flex items-center gap-2 mb-1.5">
+              <span class="badge-civic-teal text-xs font-semibold px-2 py-0.5 rounded">Active Workspace</span>
+              <span id="workspace-challenge-id" class="text-xs font-mono font-bold text-slate-700">NIV-401</span>
+              <span class="text-slate-300">&bull;</span>
+              <span class="text-xs text-[#2D6A4F] font-semibold">Stage: In Progress / Pilot Build</span>
+            </div>
+            <h1 id="workspace-challenge-title" class="font-display text-xl sm:text-2xl font-bold text-slate-900">
+              AI-Powered Stormwater Drain Clog Detection & Flash Flood Alert
+            </h1>
+            <p class="text-xs text-slate-600 mt-1">
+              Collaborative space for <span class="font-semibold text-slate-800">BIT Mesra Sensor Lab (University)</span>, <span class="font-semibold text-slate-800">CCL CSR (Industry Sponsor)</span>, and <span class="font-semibold text-slate-800">Ranchi Municipal Corporation (Civic Owner)</span>.
+            </p>
+          </div>
+
+          <!-- Submit Prototype Action -->
+          <button type="button" id="btn-open-submit-solution" class="px-4 py-2.5 rounded-xl text-xs font-semibold bg-[#1B4942] hover:bg-[#153B35] text-white shadow-xs flex items-center gap-1.5 flex-shrink-0">
+            <span>Submit Prototype Solution</span>
+          </button>
+        </div>
+
+        <!-- 5-Tab Navigation -->
+        <div class="flex items-center gap-2 border-b border-stone-200 mb-6 text-xs font-semibold overflow-x-auto pb-1">
+          <button type="button" class="ws-tab px-4 py-2 rounded-t-lg bg-white border border-stone-200 border-b-white text-[#1B4942]" data-ws-tab="kanban">
+            Kanban Board
+          </button>
+          <button type="button" class="ws-tab px-4 py-2 rounded-t-lg text-slate-600 hover:text-slate-900" data-ws-tab="docs">
+            Shared Docs
+          </button>
+          <button type="button" class="ws-tab px-4 py-2 rounded-t-lg text-slate-600 hover:text-slate-900" data-ws-tab="chat">
+            Team Chat (4)
+          </button>
+          <button type="button" class="ws-tab px-4 py-2 rounded-t-lg text-slate-600 hover:text-slate-900" data-ws-tab="reviews">
+            Mentor Reviews
+          </button>
+          <button type="button" class="ws-tab px-4 py-2 rounded-t-lg text-slate-600 hover:text-slate-900" data-ws-tab="ideas">
+            Idea Backlog
+          </button>
+        </div>
+
+        <!-- Tab 1: Kanban Board -->
+        <div id="ws-content-kanban" class="ws-content block">
+          <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+            
+            <!-- To Do -->
+            <div class="kanban-column p-4">
+              <div class="flex items-center justify-between mb-3 pb-2 border-b border-stone-200">
+                <span class="text-xs font-bold text-slate-700">To Do</span>
+                <span class="text-[10px] px-2 py-0.5 rounded-full bg-stone-200 text-slate-700 font-semibold">2</span>
+              </div>
+              <div class="space-y-2.5">
+                <div class="kanban-card p-3">
+                  <span class="text-[9px] uppercase font-bold px-1.5 py-0.5 rounded bg-blue-50 text-blue-700">Hardware</span>
+                  <h5 class="text-xs font-semibold text-slate-900 mt-1">Calibrate optical turbidity sensor threshold</h5>
+                  <p class="text-[11px] text-slate-500 mt-0.5">Need to verify dry vs wet sediment reflectivity values.</p>
+                </div>
+                <div class="kanban-card p-3">
+                  <span class="text-[9px] uppercase font-bold px-1.5 py-0.5 rounded bg-purple-50 text-purple-700">Permits</span>
+                  <h5 class="text-xs font-semibold text-slate-900 mt-1">Acquire ward street drain manhole access badge</h5>
+                  <p class="text-[11px] text-slate-500 mt-0.5">Awaiting municipal commissioner signature.</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- In Progress -->
+            <div class="kanban-column p-4">
+              <div class="flex items-center justify-between mb-3 pb-2 border-b border-stone-200">
+                <span class="text-xs font-bold text-slate-700">In Progress</span>
+                <span class="text-[10px] px-2 py-0.5 rounded-full bg-blue-100 text-blue-800 font-semibold">2</span>
+              </div>
+              <div class="space-y-2.5">
+                <div class="kanban-card p-3 border-l-4 border-l-[#1B4942]">
+                  <span class="text-[9px] uppercase font-bold px-1.5 py-0.5 rounded bg-emerald-50 text-emerald-700">AI Model</span>
+                  <h5 class="text-xs font-semibold text-slate-900 mt-1">Edge ultrasonic water-level inference model</h5>
+                  <p class="text-[11px] text-slate-500 mt-0.5">Running on ESP32 micro-controller test bench.</p>
+                </div>
+                <div class="kanban-card p-3 border-l-4 border-l-[#B45309]">
+                  <span class="text-[9px] uppercase font-bold px-1.5 py-0.5 rounded bg-amber-50 text-amber-700">Telemetry</span>
+                  <h5 class="text-xs font-semibold text-slate-900 mt-1">LoRaWAN gateway transmission testing</h5>
+                  <p class="text-[11px] text-slate-500 mt-0.5">Packet delivery across 3.2km urban testbed.</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Review -->
+            <div class="kanban-column p-4">
+              <div class="flex items-center justify-between mb-3 pb-2 border-b border-stone-200">
+                <span class="text-xs font-bold text-slate-700">Review</span>
+                <span class="text-[10px] px-2 py-0.5 rounded-full bg-amber-100 text-amber-800 font-semibold">1</span>
+              </div>
+              <div class="space-y-2.5">
+                <div class="kanban-card p-3">
+                  <span class="text-[9px] uppercase font-bold px-1.5 py-0.5 rounded bg-stone-100 text-slate-700">CAD Housing</span>
+                  <h5 class="text-xs font-semibold text-slate-900 mt-1">IP68 Waterproof enclosure prototype 3D render</h5>
+                  <p class="text-[11px] text-slate-500 mt-0.5">Submitted for Industry Mentor review.</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Done -->
+            <div class="kanban-column p-4">
+              <div class="flex items-center justify-between mb-3 pb-2 border-b border-stone-200">
+                <span class="text-xs font-bold text-slate-700">Done</span>
+                <span class="text-[10px] px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 font-semibold">3</span>
+              </div>
+              <div class="space-y-2.5">
+                <div class="kanban-card p-3">
+                  <span class="text-[9px] uppercase font-bold px-1.5 py-0.5 rounded bg-emerald-50 text-emerald-700">Field Survey</span>
+                  <h5 class="text-xs font-semibold text-slate-900 mt-1">Harmu Feeder Drain topographical GPS mapping</h5>
+                  <p class="text-[11px] text-slate-500 mt-0.5">Identified 20 choke points with citizen forum.</p>
+                </div>
+                <div class="kanban-card p-3">
+                  <span class="text-[9px] uppercase font-bold px-1.5 py-0.5 rounded bg-emerald-50 text-emerald-700">CSR Grant</span>
+                  <h5 class="text-xs font-semibold text-slate-900 mt-1">Tranche 1 Grant disbursement (&#8377;3,50,000)</h5>
+                  <p class="text-[11px] text-slate-500 mt-0.5">Hardware procurement account credited.</p>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Tab 2: Shared Docs -->
+        <div id="ws-content-docs" class="ws-content hidden">
+          <div class="bg-white rounded-2xl border border-stone-200 p-6 shadow-xs space-y-4">
+            <div class="flex items-center justify-between pb-3 border-b border-stone-200">
+              <div>
+                <h4 class="font-bold text-slate-900 text-sm">System Engineering Specification &mdash; NIV-401 v1.4</h4>
+                <p class="text-xs text-slate-500">Last edited 2 hours ago by Dr. Aryan Sharma (Faculty Lead)</p>
+              </div>
+              <span class="text-xs px-2.5 py-1 rounded bg-[#EDF4F0] text-[#1B4942] font-semibold">Collaborative Mode</span>
+            </div>
+            <textarea id="ws-doc-text" rows="10" class="w-full p-4 rounded-xl bg-stone-50 border border-slate-200 text-slate-800 text-xs font-mono leading-relaxed focus:outline-none focus:border-[#1B4942]"># NIV-401 TECHNICAL PROTOCOL
+
+1. SENSOR ARCHITECTURE:
+   - Microcontroller: ESP32-S3 with deep sleep power draw < 15uA.
+   - Silt Probe: Dual 40kHz Ultrasonic Transducer with hydrophobic coating.
+   - Solar Harvesting: 5V 1.2W monocrystalline panel with LiFePO4 battery.
+
+2. CLOUD TELEMETRY:
+   - Protocol: MQTT over LoRaWAN (ChirpStack municipal cluster).
+   - Interval: Heartbeat every 15 minutes; Emergency alert < 2 seconds on 30% sudden depth surge.
+
+3. REPLICATION CLUSTER:
+   - This exact sensor firmware will also be field-piloted for Jamshedpur Subarnarekha Basin (Challenge #NIV-402).</textarea>
+            <div class="flex justify-end">
+              <button type="button" onclick="saveWorkspaceDoc()" class="px-4 py-2 rounded-lg text-xs font-semibold bg-[#1B4942] text-white shadow-xs">
+                Save Specification Changes
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tab 3: Team Chat -->
+        <div id="ws-content-chat" class="ws-content hidden">
+          <div class="bg-white rounded-2xl border border-stone-200 shadow-xs flex flex-col h-[460px]">
+            <div class="p-3 border-b border-stone-200 flex items-center justify-between bg-stone-50 rounded-t-2xl">
+              <span class="text-xs font-bold text-slate-800">#niv-401-project-room</span>
+              <span class="text-[11px] text-slate-500">4 Active Stakeholders</span>
+            </div>
+            <div id="chat-messages" class="flex-grow p-4 overflow-y-auto space-y-3 text-xs">
+              <div class="flex items-start gap-2.5">
+                <div class="w-7 h-7 rounded-full bg-[#EDF4F0] text-[#1B4942] font-bold flex items-center justify-center flex-shrink-0">AS</div>
+                <div>
+                  <div class="flex items-center gap-1.5">
+                    <span class="font-bold text-slate-900">Dr. Aryan Sharma (BIT Mesra Lead)</span>
+                    <span class="text-[10px] text-slate-400">10:14 AM</span>
+                  </div>
+                  <p class="text-slate-700 mt-0.5">We completed the battery drain bench test &mdash; continuous telemetry runs for 42 days even without sunlight.</p>
+                </div>
+              </div>
+              <div class="flex items-start gap-2.5">
+                <div class="w-7 h-7 rounded-full bg-[#F0F4F8] text-[#1E3A5F] font-bold flex items-center justify-center flex-shrink-0">RK</div>
+                <div>
+                  <div class="flex items-center gap-1.5">
+                    <span class="font-bold text-slate-900">Ravi Krishnan (CCL CSR Mentor)</span>
+                    <span class="text-[10px] text-slate-400">10:30 AM</span>
+                  </div>
+                  <p class="text-slate-700 mt-0.5">Great progress team! Once you upload the prototype demo, I can approve the Phase 2 grant release and schedule the RMC pilot installation.</p>
+                </div>
+              </div>
+              <div class="flex items-start gap-2.5">
+                <div class="w-7 h-7 rounded-full bg-[#FEF7ED] text-[#B45309] font-bold flex items-center justify-center flex-shrink-0">PM</div>
+                <div>
+                  <div class="flex items-center gap-1.5">
+                    <span class="font-bold text-slate-900">Pooja Murthy (Citizen Forum)</span>
+                    <span class="text-[10px] text-slate-400">11:05 AM</span>
+                  </div>
+                  <p class="text-slate-700 mt-0.5">Residents along Kishore Ganj and Harmu Road are excited to see the pilot sensors deployed before this season's rains!</p>
+                </div>
+              </div>
+            </div>
+            <div class="p-3 border-t border-stone-200 bg-stone-50 rounded-b-2xl flex gap-2 items-center flex-wrap sm:flex-nowrap">
+              <label class="px-2.5 py-2 rounded-lg border border-slate-300 bg-white hover:bg-stone-100 text-slate-700 text-xs flex-shrink-0 cursor-pointer flex items-center gap-1 transition-colors" title="Attach Image / Inspection Video (Industry Mentor & Students)">
+                <input type="file" id="chat-media-file-input" accept="image/*,video/*" class="hidden" onchange="handleChatMediaUpload(event)" />
+                <span>📷 Upload Media</span>
+              </label>
+              <button type="button" onclick="insertSampleIndustryMedia()" class="px-2 py-2 rounded-lg border border-slate-300 bg-white hover:bg-stone-100 text-slate-700 text-[11px] font-semibold flex-shrink-0" title="Attach Sample Field Diagram / Sensor Video">
+                📎 Sample Media
+              </button>
+              <input type="text" id="chat-input" placeholder="Type message or updates..." data-i18n-placeholder="chatPlaceholder" class="flex-grow px-3 py-2 rounded-lg bg-white border border-slate-300 text-slate-900 text-xs focus:outline-none focus:border-[#1B4942]" />
+              <button type="button" class="btn-voice-input py-2 px-2.5 text-xs flex-shrink-0" data-target="chat-input" title="Tap to Speak (Voice Message)">
+                <span class="voice-dot"></span> 🎤
+              </button>
+              <button type="button" onclick="sendChatMessage()" class="px-4 py-2 rounded-lg text-xs font-semibold bg-[#1B4942] text-white shadow-xs flex-shrink-0" data-i18n="sendBtn">Send</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tab 4: Mentor Reviews -->
+        <div id="ws-content-reviews" class="ws-content hidden">
+          <div class="bg-white rounded-2xl border border-stone-200 p-6 shadow-xs space-y-4">
+            <h4 class="font-bold text-slate-900 text-sm">Industry Mentor Assessment & Review Log</h4>
+            <div class="p-4 rounded-xl bg-stone-50 border border-stone-200">
+              <div class="flex items-center justify-between mb-2">
+                <div class="flex items-center gap-2">
+                  <span class="font-bold text-slate-900 text-xs">Ravi Krishnan (Central Coalfields Limited CSR)</span>
+                  <span class="text-xs font-semibold text-amber-700 bg-amber-50 px-2 py-0.5 rounded border border-amber-200">Rated 5.0 / 5.0</span>
+                </div>
+                <span class="text-[10px] text-slate-400">Milestone 2 Review</span>
+              </div>
+              <p class="text-xs text-slate-700 leading-relaxed">
+                "Outstanding execution on ultrasonic transducer calibration. Power optimization is well within target metrics. Recommend standardizing connector housing so it can be manufactured cost-effectively at 100+ units for city-wide rollout."
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tab 5: Ideas Backlog -->
+        <div id="ws-content-ideas" class="ws-content hidden">
+          <div class="bg-white rounded-2xl border border-stone-200 p-6 shadow-xs space-y-4">
+            <div class="flex items-center justify-between">
+              <h4 class="font-bold text-slate-900 text-sm">Community & Student Ideas Backlog</h4>
+              <button type="button" onclick="addIdeaPrompt()" class="px-3 py-1.5 rounded-lg text-xs font-semibold bg-[#EDF4F0] text-[#1B4942] border border-[#CADED4]">+ Add Idea</button>
+            </div>
+            <div id="ideas-list" class="space-y-2.5">
+              <div class="p-3 rounded-lg bg-stone-50 border border-stone-200 text-xs">
+                <div class="font-semibold text-slate-900">Solar-powered wiper for sensor lens</div>
+                <p class="text-slate-600 mt-0.5">Prevent algae formation in stagnant drainage water by adding a micro-wiper blade every 12 hours.</p>
+              </div>
+              <div class="p-3 rounded-lg bg-stone-50 border border-stone-200 text-xs">
+                <div class="font-semibold text-slate-900">WhatsApp Alert Bot for Ward Sanitation Officers</div>
+                <p class="text-slate-600 mt-0.5">Send instant automated WhatsApp message with Google Maps pinpoint when silt crosses 70% threshold.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ================================================================= -->
+    <!-- VIEW 7: INDUSTRY REVIEW PANEL -->
+    <!-- ================================================================= -->
+    <section id="view-industry-review" class="view-section hidden py-8 md:py-12">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        
+        <div class="rounded-2xl bg-white border border-stone-200 p-6 mb-6 shadow-xs flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+          <div>
+            <div class="flex items-center gap-2 mb-1.5">
+              <span class="badge-civic-slate text-xs font-semibold px-2 py-0.5 rounded">Industry Review Portal</span>
+              <span class="text-xs text-slate-500 font-medium">Statutory CSR & Pilot Verification</span>
+            </div>
+            <h1 class="font-display text-2xl font-bold text-slate-900">Student Team Prototype Submissions</h1>
+            <p class="text-xs text-slate-600 mt-1">
+              Review deliverables submitted by matched student innovation teams. Approving a submission advances the challenge to Piloted/Deployed and automatically generates the Student Impact Certificate and Statutory CSR Impact Filing Document.
+            </p>
+          </div>
+          <span class="text-xs px-3 py-1.5 rounded-lg bg-[#EDF4F0] text-[#1B4942] font-semibold border border-[#CADED4]">
+            2 Submissions Ready for Evaluation
+          </span>
+        </div>
+
+        <div id="industry-submissions-list" class="space-y-4">
+          <!-- Injected via app.js -->
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ================================================================= -->
+    <!-- VIEW 8: PUBLIC CHALLENGE DASHBOARD (STATUS PIPELINE) -->
+    <!-- ================================================================= -->
+    <section id="view-dashboard" class="view-section hidden py-8 md:py-12">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        
+        <!-- Impact Stats Strip -->
+        <div class="grid grid-cols-2 md:grid-cols-5 gap-4 mb-8">
+          <div class="p-4 rounded-xl bg-white border border-stone-200 shadow-xs">
+            <div class="text-2xl font-bold text-slate-900" id="stat-total-challenges">8</div>
+            <div class="text-xs text-slate-600 mt-1 font-medium" data-i18n="statTotalChallenges">Total Challenges Posted</div>
+          </div>
+          <div class="p-4 rounded-xl bg-white border border-stone-200 shadow-xs">
+            <div class="text-2xl font-bold text-[#1B4942]" id="stat-solved-challenges">3</div>
+            <div class="text-xs text-slate-600 mt-1 font-medium" data-i18n="statPilotedDeployed">Piloted & Deployed</div>
+          </div>
+          <div class="p-4 rounded-xl bg-white border border-stone-200 shadow-xs">
+            <div class="text-2xl font-bold text-[#2D6A4F]" id="stat-students-involved">140+</div>
+            <div class="text-xs text-slate-600 mt-1 font-medium" data-i18n="statUniversitySolvers">University Solvers Involved</div>
+          </div>
+          <div class="p-4 rounded-xl bg-white border border-stone-200 shadow-xs">
+            <div class="text-2xl font-bold text-[#B45309]" id="stat-partners-engaged">18</div>
+            <div class="text-xs text-slate-600 mt-1 font-medium" data-i18n="statCsrPartners">Industry CSR Partners</div>
+          </div>
+          <div class="p-4 rounded-xl bg-white border border-stone-200 shadow-xs col-span-2 md:col-span-1">
+            <div class="text-2xl font-bold text-rose-700" id="stat-people-affected">4,50,000+</div>
+            <div class="text-xs text-slate-600 mt-1 font-medium" data-i18n="statPeopleAffected">Citizens Impacted</div>
+          </div>
+        </div>
+
+        <!-- Problem Density Heat Map View Across Jharkhand Districts -->
+        <div class="rounded-2xl bg-white border border-stone-200 p-6 mb-8 shadow-xs">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between pb-3 mb-4 border-b border-stone-200 gap-2">
+            <div>
+              <div class="flex items-center gap-2">
+                <span class="px-2 py-0.5 rounded text-[10px] font-bold uppercase bg-red-100 text-red-800">Live Density Analysis</span>
+                <h2 class="font-display text-lg font-bold text-slate-900" data-i18n="districtDensityHeading">Jharkhand District Problem Density Heat Map</h2>
+              </div>
+              <p class="text-xs text-slate-600 mt-0.5" data-i18n="districtDensityDesc">
+                Darker hot zones represent concentrated urban & environmental challenge clusters across Jharkhand's 5 administrative divisions.
+              </p>
+            </div>
+            <a href="#/challenges?view=map&mode=heat" class="btn-civic-teal px-3.5 py-1.5 rounded-lg text-xs font-semibold shadow-xs flex items-center gap-1 shrink-0">
+              <span>View Full Interactive Heat Map &rarr;</span>
+            </a>
+          </div>
+
+          <!-- Heat Density Grid / District Matrix -->
+          <div id="dashboard-district-heat-matrix" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            <!-- Dynamically populated via app.js -->
+          </div>
+        </div>
+
+        <div class="rounded-2xl bg-white border border-stone-200 p-6 shadow-xs">
+          <div class="flex flex-col md:flex-row items-start md:items-center justify-between pb-4 mb-6 border-b border-stone-200 gap-4">
+            <div>
+              <h2 class="font-display text-xl font-bold text-slate-900" data-i18n="civicPipelineHeading">Jharkhand Civic Challenge Pipeline</h2>
+              <p class="text-xs text-slate-600 mt-0.5" data-i18n="civicPipelineDesc">Read-only milestone tracker open to all citizens, researchers, and government departments.</p>
+            </div>
+            <a href="#/post-challenge" class="px-3.5 py-2 rounded-lg text-xs font-semibold bg-[#B45309] hover:bg-[#92400E] text-white shadow-xs" data-i18n="reportNewProblemBtn">
+              + Report New Problem
+            </a>
+          </div>
+
+          <div id="dashboard-pipeline-list" class="space-y-4">
+            <!-- Injected via app.js -->
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ================================================================= -->
+    <!-- VIEW 9: LEADERBOARD, STATE AWARDS & HALL OF IMPACT -->
+    <!-- ================================================================= -->
+    <section id="view-leaderboard" class="view-section hidden py-8 md:py-12">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        
+        <!-- Header Banner -->
+        <div class="rounded-2xl bg-white border border-stone-200 p-6 md:p-8 mb-6 shadow-xs flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+          <div>
+            <div class="flex items-center gap-2 mb-2">
+              <span class="badge-civic-teal text-xs font-semibold px-2.5 py-0.5 rounded-full" data-i18n="solverRecognitionBadge">
+                National & Jharkhand Solver Recognition
+              </span>
+              <span class="text-xs text-slate-500 font-medium" data-i18n="seasonBadge">• Q3 2026 Season</span>
+            </div>
+            <h1 class="font-display text-2xl sm:text-3xl font-bold text-slate-900" data-i18n="leaderboardPageHeading">Campus Leaderboard & Problem Origin Innovation Awards</h1>
+            <p class="text-xs text-slate-600 mt-1 max-w-2xl" data-i18n="leaderboardPageDesc">
+              Celebrating university labs, student innovators, and breakthrough civic deployments solving Jharkhand's civic challenges across India. Rank, earn Division Awards, and unlock Pre-Placement Offers (PPOs).
+            </p>
+          </div>
+
+          <!-- Section Switcher Tabs -->
+          <div class="inline-flex rounded-xl border border-slate-300 p-1 bg-stone-100 text-xs font-semibold flex-wrap">
+            <button type="button" id="tab-btn-ranks" class="px-3.5 py-2 rounded-lg bg-white text-slate-900 shadow-2xs font-bold" onclick="switchLeaderboardSubTab('ranks')" data-i18n="tabCampusLeaderboard">Campus Leaderboard</button>
+            <button type="button" id="tab-btn-awards" class="px-3.5 py-2 rounded-lg text-slate-600 hover:text-slate-900" onclick="switchLeaderboardSubTab('awards')" data-i18n="tabOriginDistrictAwards">Best of Jharkhand: Problem Origin Awards</button>
+            <button type="button" id="tab-btn-hall" class="px-3.5 py-2 rounded-lg text-slate-600 hover:text-slate-900" onclick="switchLeaderboardSubTab('hall')" data-i18n="tabHallOfImpact">Hall of Impact</button>
+          </div>
+        </div>
+
+        <!-- Sub-View 1: Campus Leaderboard -->
+        <div id="leaderboard-tab-ranks" class="space-y-6">
+          
+          <!-- Top 3 Podium Cards -->
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-5" id="leaderboard-podium">
+            <!-- Injected via app.js -->
+          </div>
+
+          <!-- Filter Bar -->
+          <div class="bg-white rounded-2xl border border-stone-200 p-4 shadow-xs">
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+              <div>
+                <label class="block text-[11px] font-semibold text-slate-600 mb-1" data-i18n="filterCollegeLabel">Filter by College / University</label>
+                <select id="leaderboard-college-filter" class="w-full px-3 py-2 rounded-lg bg-[#F9F8F6] border border-slate-300 text-slate-800 text-xs focus:outline-none focus:border-[#1B4942]">
+                  <option value="all" data-i18n="filterAllColleges">All Universities & Colleges (Nationwide)</option>
+                  <option value="BIT Mesra">BIT Mesra, Ranchi</option>
+                  <option value="IIT Bombay">IIT Bombay</option>
+                  <option value="IIT (ISM) Dhanbad">IIT (ISM) Dhanbad</option>
+                  <option value="IISc Bangalore">IISc Bangalore</option>
+                  <option value="NIT Jamshedpur">NIT Jamshedpur</option>
+                  <option value="IIT Kharagpur">IIT Kharagpur</option>
+                  <option value="BITS Pilani">BITS Pilani</option>
+                  <option value="AIIMS Deoghar">AIIMS Deoghar</option>
+                  <option value="NIT Rourkela">NIT Rourkela</option>
+                  <option value="Jadavpur">Jadavpur University</option>
+                  <option value="Vinoba Bhave">Vinoba Bhave University (VBU), Hazaribagh</option>
+                  <option value="Nilamber-Pitamber">Nilamber-Pitamber University (NPU), Medininagar</option>
+                  <option value="Kolhan University">Kolhan University, Chaibasa</option>
+                  <option value="BIT Sindri">BIT Sindri, Dhanbad</option>
+                  <option value="Sido Kanhu Murmu">Sido Kanhu Murmu University (SKMU), Dumka</option>
+                  <option value="Ranchi University">Ranchi University (RU), Ranchi</option>
+                </select>
+              </div>
+
+              <div>
+                <label class="block text-[11px] font-semibold text-slate-600 mb-1" data-i18n="filterDomainLabel">Filter by Civic Domain</label>
+                <select id="leaderboard-domain-filter" class="w-full px-3 py-2 rounded-lg bg-[#F9F8F6] border border-slate-300 text-slate-800 text-xs focus:outline-none focus:border-[#1B4942]">
+                  <option value="all" data-i18n="filterAllDomains">All Domains (18)</option>
+                  <option value="Healthcare">Healthcare</option>
+                  <option value="Cleanliness & Sanitation">Cleanliness & Sanitation</option>
+                  <option value="Women Safety">Women Safety</option>
+                  <option value="Street Lighting">Street Lighting</option>
+                  <option value="Water Shortage">Water Shortage</option>
+                  <option value="Electricity Cuts">Electricity Cuts</option>
+                  <option value="Education">Education</option>
+                  <option value="Agriculture & Farming">Agriculture & Farming</option>
+                  <option value="Environment & Pollution">Environment & Pollution</option>
+                  <option value="Infrastructure & Roads">Infrastructure & Roads</option>
+                  <option value="Public Transport">Public Transport</option>
+                  <option value="Waste Management">Waste Management</option>
+                  <option value="Disaster Management">Disaster Management</option>
+                  <option value="Employment & Livelihood">Employment & Livelihood</option>
+                  <option value="Digital Literacy">Digital Literacy</option>
+                  <option value="Elderly & Disabled Care">Elderly & Disabled Care</option>
+                  <option value="Child Welfare">Child Welfare</option>
+                  <option value="Other">Other</option>
+                </select>
+              </div>
+
+              <div>
+                <label class="block text-[11px] font-semibold text-slate-600 mb-1" data-i18n="filterTimeLabel">Time Period</label>
+                <select id="leaderboard-time-filter" class="w-full px-3 py-2 rounded-lg bg-[#F9F8F6] border border-slate-300 text-slate-800 text-xs focus:outline-none focus:border-[#1B4942]">
+                  <option value="month" data-i18n="timeMonth">This Month (Sep 2026)</option>
+                  <option value="quarter" selected data-i18n="timeQuarter">This Quarter (Q3 2026)</option>
+                  <option value="all" data-i18n="timeAllTime">All-Time Cumulative</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <!-- Leaderboard Table -->
+          <div class="bg-white rounded-2xl border border-stone-200 shadow-xs overflow-hidden">
+            <div class="p-4 border-b border-stone-200 flex items-center justify-between">
+              <span class="text-xs font-bold text-slate-900" data-i18n="rankingTableTitle">Solvers Ranking Table (Nationwide & State)</span>
+              <span class="text-[11px] text-slate-500" data-i18n="rankingTableSubtitle">Updated from verified field deployments</span>
+            </div>
+            <div class="overflow-x-auto">
+              <table class="w-full text-left text-xs">
+                <thead class="bg-[#F9F8F6] text-slate-600 border-b border-stone-200">
+                  <tr>
+                    <th class="py-3 px-4 font-bold" data-i18n="rankCol">Rank</th>
+                    <th class="py-3 px-4 font-bold" data-i18n="teamCol">University Team & Lab</th>
+                    <th class="py-3 px-4 font-bold" data-i18n="domainCol">Primary Domain</th>
+                    <th class="py-3 px-4 font-bold text-center" data-i18n="solvedCol">Challenges Solved</th>
+                    <th class="py-3 px-4 font-bold text-center" data-i18n="impactCol">Impact Score</th>
+                    <th class="py-3 px-4 font-bold text-center" data-i18n="upvotesCol">Upvotes</th>
+                    <th class="py-3 px-4 font-bold text-center" data-i18n="ppoCol">Recognition & PPO</th>
+                    <th class="py-3 px-4 font-bold text-right" data-i18n="actionCol">Action</th>
+                  </tr>
+                </thead>
+                <tbody id="leaderboard-table-body" class="divide-y divide-stone-200">
+                  <!-- Injected via app.js -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Sub-View 2: State-Level Innovation Awards -->
+        <div id="leaderboard-tab-awards" class="hidden space-y-6">
+          <div class="rounded-2xl bg-gradient-to-r from-[#EDF4F0] to-white border border-[#CADED4] p-6">
+            <div class="max-w-3xl">
+              <span class="text-xs font-bold uppercase tracking-wider text-[#1B4942]" data-i18n="awardAttributionTag">Problem Origin District Attribution</span>
+              <h2 id="awards-section-title" class="font-display text-xl sm:text-2xl font-bold text-slate-900 mt-1" data-i18n="awardsTitle">Best of Jharkhand: District Problem Origin Innovation Awards (Q3 2026)</h2>
+              <p id="awards-section-desc" class="text-xs text-slate-600 mt-1" data-i18n="awardsDesc">
+                Awards are grouped by the specific Jharkhand district where the civic problem originated &mdash; credited to whichever university or industry team successfully resolved it, regardless of the solver's home location.
+              </p>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5" id="state-awards-grid">
+            <!-- Injected via app.js -->
+          </div>
+        </div>
+
+        <!-- Sub-View 3: Hall of Impact -->
+        <div id="leaderboard-tab-hall" class="hidden space-y-6">
+          <div class="rounded-2xl bg-white border border-stone-200 p-6 shadow-xs">
+            <div class="max-w-3xl mb-6">
+              <span class="text-xs font-bold uppercase tracking-wider text-[#B45309]">Statewide Scaled Rollout</span>
+              <h2 class="font-display text-xl sm:text-2xl font-bold text-slate-900 mt-1">Hall of Impact: Scaled Jharkhand Civic Deployments</h2>
+              <p class="text-xs text-slate-600 mt-1">
+                Permanent archive honoring civic innovations scaled across Jharkhand's administrative divisions and municipal bodies.
+              </p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-5" id="hall-of-impact-grid">
+              <!-- Injected via app.js -->
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ================================================================= -->
+  <!-- MODALS CONTAINER -->
+  <!-- ================================================================= -->
+
+  <!-- MODAL 1: Duplicate Detection & Clustering Demo Modal -->
+  <div id="modal-duplicate-cluster" class="fixed inset-0 z-50 bg-slate-900/40 backdrop-blur-xs hidden items-center justify-center p-4">
+    <div class="bg-white border border-stone-200 rounded-2xl max-w-xl w-full p-6 sm:p-8 shadow-xl text-slate-800 relative">
+      <div class="w-12 h-12 rounded-xl bg-[#FEF7ED] border border-[#FDE68A] flex items-center justify-center text-[#B45309] mb-4">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"></path>
+        </svg>
+      </div>
+      <span class="text-xs uppercase font-bold tracking-wider text-[#92400E]">Jharkhand Civic Clustering & Similarity Engine</span>
+      <h3 class="font-display text-xl font-bold text-slate-900 mt-1 mb-2">
+        We found similar challenges reported in other locations!
+      </h3>
+      <p class="text-xs text-slate-600 mb-4 leading-relaxed">
+        A similar challenge in the <span class="font-semibold text-slate-900" id="duplicate-domain-name">Water Resources</span> domain with matching problem parameters was previously reported in another city.
+      </p>
+
+      <div class="p-3.5 rounded-xl bg-[#F9F8F6] border border-stone-200 mb-5 text-xs space-y-2">
+        <div class="flex items-center justify-between text-slate-500 text-[11px]">
+          <span>Existing Linked Challenge</span>
+          <span class="font-mono text-[#1B4942] font-semibold">#NIV-401</span>
+        </div>
+        <h5 class="font-semibold text-slate-900">AI-Powered Stormwater Drain Clog Detection & Flash Flood Alert</h5>
+        <p class="text-slate-600 text-[11px]">Reported in Ranchi (Harmu River Feeder) &bull; 342 Upvotes &bull; BIT Mesra Team Matched</p>
+      </div>
+
+      <p class="text-xs font-semibold text-slate-800 mb-5">
+        "Would you like to merge into a Cluster so one solution can be scaled across all locations?"
+      </p>
+
+      <div class="flex flex-col sm:flex-row gap-2.5 justify-end">
+        <button type="button" onclick="resolveClusterDecision(false)" class="px-4 py-2.5 rounded-xl text-xs font-semibold text-slate-600 hover:bg-stone-100">
+          No, Keep as Standalone
+        </button>
+        <button type="button" onclick="resolveClusterDecision(true)" class="btn-civic-teal px-5 py-2.5 rounded-xl text-xs font-semibold shadow-xs flex items-center justify-center gap-1.5">
+          <span>Yes, Merge into Clustered Challenge</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL 2: Apply to Solve (Team Formation for Students) -->
+  <div id="modal-team-formation" class="fixed inset-0 z-50 bg-slate-900/40 backdrop-blur-xs hidden items-center justify-center p-4">
+    <div class="bg-white border border-stone-200 rounded-2xl max-w-lg w-full p-6 shadow-xl text-slate-800 relative">
+      <button type="button" onclick="closeModal('modal-team-formation')" class="absolute top-4 right-4 text-slate-400 hover:text-slate-700">&times;</button>
+      <div class="mb-4">
+        <span class="badge-civic-teal text-xs font-semibold px-2 py-0.5 rounded">University Solver Application</span>
+        <h3 class="font-display text-lg font-bold text-slate-900 mt-1">Form Team & Apply to Solve</h3>
+        <p class="text-xs text-slate-600 mt-0.5">Assemble student teammates and faculty advisors to claim this challenge.</p>
+      </div>
+      <form id="team-formation-form" class="space-y-3.5">
+        <div>
+          <label class="block text-xs font-semibold text-slate-700 mb-1">Team Name *</label>
+          <input type="text" name="team_name" required placeholder="e.g. EcoSensors Innovation Lab" class="w-full px-3 py-2 rounded-lg bg-white border border-slate-300 text-xs focus:outline-none focus:border-[#1B4942]" />
+        </div>
+        <div>
+          <label class="block text-xs font-semibold text-slate-700 mb-1">Teammate Names & Emails *</label>
+          <textarea name="teammates" rows="3" required placeholder="1. Priya Verma (priya@bitmesra.ac.in) - Firmware Lead&#10;2. Rohan Gupta (rohan@bitmesra.ac.in) - ML Specialist" class="w-full px-3 py-2 rounded-lg bg-white border border-slate-300 text-xs focus:outline-none focus:border-[#1B4942]"></textarea>
+        </div>
+        <div>
+          <label class="block text-xs font-semibold text-slate-700 mb-1">Faculty Advisor / Lab Lead (Optional)</label>
+          <input type="text" name="faculty_advisor" placeholder="e.g. Dr. S. K. Mahato (Dept of Remote Sensing & Geoinformatics, BIT Mesra)" class="w-full px-3 py-2 rounded-lg bg-white border border-slate-300 text-xs focus:outline-none focus:border-[#1B4942]" />
+        </div>
+        <button type="submit" class="btn-civic-teal w-full py-2.5 rounded-lg text-xs font-semibold shadow-xs">
+          Submit Team Application & Unlock Workspace &rarr;
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL 2B: Team Formation Success Modal -->
+  <div id="modal-team-success" class="fixed inset-0 z-50 bg-slate-900/50 backdrop-blur-xs hidden items-center justify-center p-4">
+    <div class="bg-white border border-stone-200 rounded-2xl max-w-lg w-full p-6 sm:p-7 shadow-2xl relative text-slate-800">
+      <div class="w-12 h-12 rounded-xl bg-[#EDF4F0] border border-[#CADED4] flex items-center justify-center text-[#1B4942] mb-4">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+      </div>
+      <span class="badge-civic-teal text-[11px] font-bold px-2.5 py-0.5 rounded-full">✓ Team Formed & Challenge Assigned</span>
+      <h3 class="font-display text-xl font-bold text-slate-900 mt-2" id="team-success-name">EcoSensors Innovation Lab</h3>
+      <p class="text-xs text-slate-600 mt-1" id="team-success-sub">Birla Institute of Technology (BIT) Mesra, Ranchi</p>
+
+      <div class="my-4 p-4 rounded-xl bg-[#F9F8F6] border border-stone-200 text-xs space-y-2.5">
+        <div>
+          <span class="text-[10px] text-slate-500 font-bold uppercase tracking-wider block">Assigned Civic Challenge</span>
+          <div class="font-bold text-[#1B4942] mt-0.5" id="team-success-challenge">#NIV-401: AI-Powered Stormwater Drain Clog Detection & Flash Flood Alert</div>
+        </div>
+        <div>
+          <span class="text-[10px] text-slate-500 font-bold uppercase tracking-wider block">Faculty Advisor / Mentor</span>
+          <div class="font-semibold text-slate-800 mt-0.5" id="team-success-advisor">Dr. S. K. Mahato (BIT Mesra)</div>
+        </div>
+        <div>
+          <span class="text-[10px] text-slate-500 font-bold uppercase tracking-wider block">Confirmed Solver Roster</span>
+          <div class="mt-1 space-y-1 text-slate-700" id="team-success-roster">
+            <!-- Populated dynamically -->
+          </div>
+        </div>
+      </div>
+
+      <div class="flex flex-col sm:flex-row gap-2.5 justify-end mt-5">
+        <button type="button" onclick="closeModal('modal-team-success')" class="px-4 py-2.5 rounded-xl text-xs font-semibold text-slate-600 hover:bg-stone-100">
+          Stay on Page
+        </button>
+        <button type="button" id="btn-team-goto-workspace" class="btn-civic-teal px-5 py-2.5 rounded-xl text-xs font-semibold shadow-xs flex items-center justify-center gap-1.5">
+          <span>Enter Collaborative Workspace &rarr;</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL 3: Industry Adoption Modal -->
+  <div id="modal-industry-adopt" class="fixed inset-0 z-50 bg-slate-900/40 backdrop-blur-xs hidden items-center justify-center p-4">
+    <div class="bg-white border border-stone-200 rounded-2xl max-w-lg w-full p-6 shadow-xl text-slate-800 relative">
+      <button type="button" onclick="closeModal('modal-industry-adopt')" class="absolute top-4 right-4 text-slate-400 hover:text-slate-700">&times;</button>
+      <div class="mb-4">
+        <span class="badge-civic-slate text-xs font-semibold px-2 py-0.5 rounded" data-i18n="industrySponsorshipBadge">Industry CSR Sponsorship</span>
+        <h3 class="font-display text-lg font-bold text-slate-900 mt-1" data-i18n="adoptChallengeHeading">Adopt Challenge for Mentorship & Sponsorship</h3>
+        <p class="text-xs text-slate-600 mt-0.5" data-i18n="adoptChallengeDesc">Choose how your company supports this civic challenge: Funding, Mentorship, Equipment, Internships, Infrastructure, Technical Consultation, or Observer.</p>
+      </div>
+      <form id="industry-adopt-form" class="space-y-3.5">
+        <input type="hidden" id="adopt-challenge-id" name="challengeId" value="NIV-401" />
+        <div>
+          <label class="block text-xs font-semibold text-slate-700 mb-1" data-i18n="companyNameLabel">Company / Foundation Name *</label>
+          <input type="text" name="company" required value="Central Coalfields Limited (CCL) CSR Wing" class="w-full px-3 py-2 rounded-lg bg-white border border-slate-300 text-xs focus:outline-none focus:border-[#1E3A5F]" />
+        </div>
+
+        <!-- Optional Support Selection (7 Multi-Select Voluntary Options) -->
+        <div class="p-3.5 rounded-xl bg-stone-50 border border-stone-200 space-y-2.5">
+          <label class="block text-xs font-bold text-slate-800" data-i18n="supportTypeLabel">Select Contribution Types (Optional & Multi-Select):</label>
+          
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
+            <label class="inline-flex items-center gap-2 font-medium text-slate-800 cursor-pointer">
+              <input type="checkbox" id="adopt-opt-funding" name="offer_funding" checked onchange="toggleAdoptFundingFields(this.checked)" class="rounded text-[#1E3A5F] focus:ring-0" />
+              <span data-i18n="offerFundingOption">Sponsor CSR Pilot Grant</span>
+            </label>
+            <label class="inline-flex items-center gap-2 font-medium text-slate-800 cursor-pointer">
+              <input type="checkbox" id="adopt-opt-mentorship" name="offer_mentorship" checked onchange="toggleAdoptMentorshipFields(this.checked)" class="rounded text-[#1E3A5F] focus:ring-0" />
+              <span data-i18n="offerMentorshipOption">Provide Technical Mentorship & Guidance</span>
+            </label>
+            <label class="inline-flex items-center gap-2 font-medium text-slate-800 cursor-pointer">
+              <input type="checkbox" id="adopt-opt-equipment" name="offer_equipment" class="rounded text-[#1E3A5F] focus:ring-0" />
+              <span data-i18n="offerEquipmentOption">Equipment & Hardware Support</span>
+            </label>
+            <label class="inline-flex items-center gap-2 font-medium text-slate-800 cursor-pointer">
+              <input type="checkbox" id="adopt-opt-internships" name="offer_internships" class="rounded text-[#1E3A5F] focus:ring-0" />
+              <span data-i18n="offerInternshipsOption">Student Internships & PPOs</span>
+            </label>
+            <label class="inline-flex items-center gap-2 font-medium text-slate-800 cursor-pointer">
+              <input type="checkbox" id="adopt-opt-infra" name="offer_infra" class="rounded text-[#1E3A5F] focus:ring-0" />
+              <span data-i18n="offerInfraOption">Infrastructure, Testbed & Lab Access</span>
+            </label>
+            <label class="inline-flex items-center gap-2 font-medium text-slate-800 cursor-pointer">
+              <input type="checkbox" id="adopt-opt-advisory" name="offer_advisory" class="rounded text-[#1E3A5F] focus:ring-0" />
+              <span data-i18n="offerAdvisoryOption">Technical Advisory & Consultation</span>
+            </label>
+            <label class="inline-flex items-center gap-2 font-medium text-slate-800 cursor-pointer sm:col-span-2">
+              <input type="checkbox" id="adopt-opt-other" name="offer_other" onchange="toggleAdoptOtherFields(this.checked)" class="rounded text-[#1E3A5F] focus:ring-0" />
+              <span data-i18n="offerOtherOption">Other Voluntary Contribution</span>
+            </label>
+          </div>
+
+          <div id="adopt-other-container" class="hidden mt-2">
+            <input type="text" id="adopt-other-text" name="other_text" placeholder="Describe custom contribution (e.g. cloud credits, specialized tooling)..." data-i18n-placeholder="otherContributionPlaceholder" class="w-full px-3 py-1.5 rounded-lg bg-white border border-slate-300 text-xs focus:outline-none focus:border-[#1E3A5F]" />
+          </div>
+
+          <div class="text-[11px] text-slate-500 italic pt-1 border-t border-stone-200" data-i18n="neitherCommitmentNotice">
+            * All contribution options are voluntary and multi-select. You can leave all unchecked to track as an industry observer.
+          </div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-3">
+          <div id="adopt-funding-container">
+            <label class="block text-xs font-semibold text-slate-700 mb-1" data-i18n="grantAmountLabel">Grant Amount (&#8377;) (Optional)</label>
+            <input type="text" id="adopt-grant-input" name="grant_amount" value="&#8377;8,50,000" placeholder="e.g. &#8377;8,50,000" class="w-full px-3 py-2 rounded-lg bg-white border border-slate-300 text-xs focus:outline-none focus:border-[#1E3A5F]" />
+          </div>
+          <div id="adopt-mentorship-container">
+            <label class="block text-xs font-semibold text-slate-700 mb-1" data-i18n="mentorshipHoursLabel">Mentorship Hours (Optional)</label>
+            <input type="number" id="adopt-mentor-input" name="mentor_hours" value="30" placeholder="e.g. 30" class="w-full px-3 py-2 rounded-lg bg-white border border-slate-300 text-xs focus:outline-none focus:border-[#1E3A5F]" />
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-xs font-semibold text-slate-700 mb-1" data-i18n="pilotCommitmentNotesLabel">Partnership Notes (Optional)</label>
+          <textarea name="adopt_notes" rows="2" placeholder="Describe field testbeds or interest..." class="w-full px-3 py-2 rounded-lg bg-white border border-slate-300 text-xs focus:outline-none focus:border-[#1E3A5F]">Will provide field pilot testbed at Harmu River Feeder catchment and sponsor hardware enclosure tooling.</textarea>
+        </div>
+        <button type="submit" class="btn-civic-slate w-full py-2.5 rounded-lg text-xs font-semibold shadow-xs" data-i18n="confirmAdoptionBtn">
+          Confirm Challenge Adoption &rarr;
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL 4: Submit Solution Prototype -->
+  <div id="modal-submit-solution" class="fixed inset-0 z-50 bg-slate-900/40 backdrop-blur-xs hidden items-center justify-center p-4">
+    <div class="bg-white border border-stone-200 rounded-2xl max-w-lg w-full p-6 shadow-xl text-slate-800 relative">
+      <button type="button" onclick="closeModal('modal-submit-solution')" class="absolute top-4 right-4 text-slate-400 hover:text-slate-700">&times;</button>
+      <div class="mb-4">
+        <span class="badge-civic-teal text-xs font-semibold px-2 py-0.5 rounded">Prototype Evaluation</span>
+        <h3 class="font-display text-lg font-bold text-slate-900 mt-1">Submit Solution for Industry Review</h3>
+        <p class="text-xs text-slate-600 mt-0.5">Send your prototype and test metrics to the Industry sponsor for formal evaluation.</p>
+      </div>
+      <form id="solution-submission-form" class="space-y-3.5">
+        <div>
+          <label class="block text-xs font-semibold text-slate-700 mb-1">Solution Title *</label>
+          <input type="text" name="sol_title" required value="Nivaran IoT Drain Probe v1.0" class="w-full px-3 py-2 rounded-lg bg-white border border-slate-300 text-xs focus:outline-none focus:border-[#1B4942]" />
+        </div>
+        <div>
+          <label class="block text-xs font-semibold text-slate-700 mb-1">Demo / GitHub Repository Link *</label>
+          <input type="url" name="sol_link" required value="https://github.com/bitmesra-civic/nivaran-harmu-silt-detector" class="w-full px-3 py-2 rounded-lg bg-white border border-slate-300 text-xs focus:outline-none focus:border-[#1B4942]" />
+        </div>
+        <div>
+          <label class="block text-xs font-semibold text-slate-700 mb-1">Summary of Results & Pilot Readiness *</label>
+          <textarea name="sol_summary" rows="3" required class="w-full px-3 py-2 rounded-lg bg-white border border-slate-300 text-xs focus:outline-none focus:border-[#1B4942]">Successfully completed 42-day bench stress test. Ultrasonic pulse achieved 98.4% silt-level accuracy. Ready for live municipal ward installation.</textarea>
+        </div>
+        <button type="submit" class="btn-civic-teal w-full py-2.5 rounded-lg text-xs font-semibold shadow-xs">
+          Submit to Industry Partner &rarr;
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL 5: Student Certificate Preview -->
+  <div id="modal-certificate" class="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs hidden items-center justify-center p-4">
+    <div class="bg-white border border-stone-200 rounded-2xl max-w-2xl w-full p-6 sm:p-8 shadow-2xl relative text-slate-900 max-h-[95vh] overflow-y-auto">
+      <button type="button" onclick="closeModal('modal-certificate')" class="absolute top-4 right-4 text-slate-400 hover:text-slate-700">&times;</button>
+      
+      <div class="certificate-frame p-8 text-center rounded-xl bg-gradient-to-b from-[#F9F8F6] to-white relative">
+        <div class="text-[11px] uppercase tracking-widest text-[#1B4942] font-bold">Jharkhand Civic Innovation Initiative &bull; Govt of Jharkhand & Nivaran</div>
+        <h2 class="font-display text-2xl font-extrabold text-slate-900 mt-2">CERTIFICATE OF CIVIC RESOLUTION</h2>
+        <p class="text-xs text-slate-500 italic mt-0.5">Presented under the Nivaran National Framework</p>
+
+        <p class="text-xs text-slate-600 mt-5">This is officially presented to</p>
+        <h3 id="cert-student-name" class="text-xl font-bold text-[#1B4942] underline decoration-1 underline-offset-4 mt-1">Dr. Aryan Sharma & Priya Verma</h3>
+        <p id="cert-university" class="text-xs text-slate-600 mt-0.5 font-medium">Birla Institute of Technology (BIT) Mesra, Ranchi</p>
+
+        <p class="text-xs text-slate-700 max-w-lg mx-auto mt-4 leading-relaxed">
+          For engineered resolution of verified civic challenge <span id="cert-challenge-title" class="font-bold text-slate-900">"AI-Powered Stormwater Drain Clog Detection & Flash Flood Alert"</span> deployed in Harmu River Feeder, Ranchi.
+        </p>
+
+        <!-- Dynamic PPO Badge Endorsement on Certificate -->
+        <div id="cert-ppo-container" class="hidden my-4 p-3 rounded-xl bg-gradient-to-r from-amber-50 to-amber-100 border border-amber-300 text-xs text-amber-900 shadow-2xs">
+          <div class="flex items-center justify-center gap-2 font-bold text-amber-900">
+            <span>PRE-PLACEMENT OFFER (PPO) ENDORSED</span>
+          </div>
+          <p id="cert-ppo-text" class="text-[11px] text-amber-800 mt-0.5">Awarded by Tata Steel Foundation R&D Labs, Jamshedpur for outstanding engineering execution.</p>
+        </div>
+
+        <div class="grid grid-cols-2 gap-4 max-w-md mx-auto my-5 p-3 rounded-lg bg-[#EDF4F0] border border-[#CADED4] text-xs">
+          <div>
+            <span class="text-slate-500 text-[10px]">Verified Civic Impact Score:</span>
+            <div id="cert-impact-score" class="text-lg font-bold text-[#1B4942]">96 / 100</div>
+          </div>
+          <div>
+            <span class="text-slate-500 text-[10px]">Statutory Certificate ID:</span>
+            <div id="cert-id" class="text-xs font-mono font-bold text-slate-800">NIV-CERT-2026-8819</div>
+          </div>
+        </div>
+
+        <div class="flex items-center justify-between pt-4 border-t border-stone-200 text-[10px] text-slate-500">
+          <div>
+            <div class="font-bold text-slate-800">Ravi Krishnan</div>
+            <div>Industry CSR Partner Lead</div>
+          </div>
+          <div class="seal-badge w-12 h-12 rounded-full flex items-center justify-center font-bold text-[9px] text-[#1B4942] uppercase tracking-tighter">
+            SEAL
+          </div>
+          <div>
+            <div class="font-bold text-slate-800">Nivaran Directorate</div>
+            <div>Civic Tech Framework</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="mt-4 flex justify-end gap-2">
+        <button type="button" onclick="closeModal('modal-certificate')" class="px-4 py-2 rounded-lg text-xs font-semibold text-slate-600 hover:bg-stone-100">Close</button>
+        <button type="button" onclick="downloadStudentCertificate()" class="btn-civic-teal px-4 py-2 rounded-lg text-xs font-semibold shadow-xs flex items-center gap-1.5">
+          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
+          <span>Download Certificate (PDF)</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL 6: CSR Statutory Impact Attestation Report Modal (NOT a certificate) -->
+  <div id="modal-csr-report" class="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs hidden items-center justify-center p-4">
+    <div class="bg-white border border-stone-200 rounded-2xl max-w-2xl w-full p-6 sm:p-8 shadow-2xl relative text-slate-900 max-h-[95vh] overflow-y-auto">
+      <button type="button" onclick="closeModal('modal-csr-report')" class="absolute top-4 right-4 text-slate-400 hover:text-slate-700">&times;</button>
+      
+      <div class="csr-report-frame p-6 rounded-xl space-y-4">
+        <div class="flex items-center justify-between border-b pb-3 border-stone-200">
+          <div>
+            <span class="text-[10px] font-bold tracking-wider text-amber-700 uppercase bg-amber-50 px-2 py-0.5 rounded border border-amber-200">Statutory CSR Documentation</span>
+            <h3 class="font-display text-lg font-bold text-slate-900 mt-1">CSR IMPACT ATTESTATION REPORT</h3>
+            <p class="text-[11px] text-slate-500">Supporting Documentation for Statutory Filing Under Section 135, Companies Act 2013 (Schedule VII)</p>
+          </div>
+          <div class="text-right text-[10px] text-slate-500 font-mono">
+            <div>AUDIT REF: CSR-2026-749</div>
+            <div>DATE: 11-SEP-2026</div>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs">
+          <div class="p-2.5 rounded bg-stone-50 border border-stone-200">
+            <span class="text-slate-500 text-[10px]">Reporting Entity:</span>
+            <div id="csr-company-name" class="font-bold text-slate-900 mt-0.5">Central Coalfields Limited (CCL)</div>
+          </div>
+          <div class="p-2.5 rounded bg-stone-50 border border-stone-200">
+            <span class="text-slate-500 text-[10px]">Schedule VII Head:</span>
+            <div class="font-bold text-slate-900 mt-0.5">Environmental Sustainability</div>
+          </div>
+          <div class="p-2.5 rounded bg-stone-50 border border-stone-200">
+            <span class="text-slate-500 text-[10px]">Disbursed Capital:</span>
+            <div id="csr-funding" class="font-bold text-[#1B4942] mt-0.5">&#8377;8,50,000</div>
+          </div>
+          <div class="p-2.5 rounded bg-stone-50 border border-stone-200">
+            <span class="text-slate-500 text-[10px]">Mentorship Logged:</span>
+            <div id="csr-hours" class="font-bold text-slate-900 mt-0.5">30.0 Hours</div>
+          </div>
+        </div>
+
+        <div class="p-3 rounded bg-stone-50 border border-stone-200 text-xs space-y-1">
+          <div class="font-bold text-slate-900">Project Output & Beneficiary Reach:</div>
+          <p class="text-slate-700 leading-relaxed text-[11px]" id="csr-output-summary">
+            Sensor-assisted stormwater telemetry in Harmu River catchment directly prevents monsoon flooding for an estimated 45,000 daily commuters and 12,000 ward residents. Prototype verified in partnership with BIT Mesra Sensor Telemetry Lab.
+          </p>
+        </div>
+
+        <div class="p-2.5 rounded bg-amber-50 border border-amber-200 text-[11px] text-amber-900">
+          <strong>Statutory Distinction:</strong> This document is a formal CSR Impact Attestation Report prepared for statutory compliance under Section 135 of the Companies Act 2013 (Schedule VII). It constitutes legal audit evidence for Board CSR reporting and is NOT a student/solver certificate.
+        </div>
+      </div>
+
+      <div class="mt-4 flex justify-end gap-2">
+        <button type="button" onclick="closeModal('modal-csr-report')" class="px-4 py-2 rounded-lg text-xs font-semibold text-slate-600 hover:bg-stone-100">Close</button>
+        <button type="button" onclick="exportCsrReport()" class="btn-civic-slate px-4 py-2 rounded-lg text-xs font-semibold shadow-xs flex items-center gap-1.5">
+          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+          <span>Export CSR Report (PDF)</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL 7: Pre-Placement Offer (PPO) Awarding Modal -->
+  <div id="modal-award-ppo" class="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs hidden items-center justify-center p-4">
+    <div class="bg-white border border-stone-200 rounded-2xl max-w-lg w-full p-6 sm:p-7 shadow-2xl relative text-slate-900 max-h-[95vh] overflow-y-auto">
+      <button type="button" onclick="closeModal('modal-award-ppo')" class="absolute top-4 right-4 text-slate-400 hover:text-slate-700">&times;</button>
+      
+      <div class="mb-4">
+        <span class="ppo-badge mb-1.5">Pre-Placement Offer (PPO) Flow</span>
+        <h3 class="font-display text-lg font-bold text-slate-900">Flag Student Solvers for Pre-Placement Offer</h3>
+        <p class="text-xs text-slate-600 mt-0.5">
+          Fast-track high-performing student engineers to your corporate engineering or R&D lab team.
+        </p>
+      </div>
+
+      <form id="award-ppo-form" class="space-y-3.5">
+        <input type="hidden" id="ppo-challenge-id" value="" />
+        <input type="hidden" id="ppo-submission-id" value="" />
+
+        <div>
+          <label class="block text-xs font-semibold text-slate-700 mb-1">Select Student Member to Offer PPO *</label>
+          <select id="ppo-student-select" name="student_name" required class="w-full px-3 py-2 rounded-lg bg-white border border-slate-300 text-slate-900 text-xs focus:outline-none focus:border-[#1B4942]">
+            <option value="Dr. Aryan Sharma">Dr. Aryan Sharma (Hardware & Sensors Lead - BIT Mesra)</option>
+            <option value="Priya Verma">Priya Verma (Edge ML & Embedded Firmware - BIT Mesra)</option>
+            <option value="All Core Solvers">Entire Core Student Team (All 3 Solvers)</option>
+          </select>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div>
+            <label class="block text-xs font-semibold text-slate-700 mb-1">Offered Role / Title *</label>
+            <input type="text" id="ppo-role-title" name="role_title" required value="Associate IoT & AI Systems Engineer" class="w-full px-3 py-2 rounded-lg bg-white border border-slate-300 text-slate-900 text-xs focus:outline-none focus:border-[#1B4942]" />
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-slate-700 mb-1">Compensation / Fellowship *</label>
+            <input type="text" id="ppo-package" name="package" required value="₹16.5 - ₹19.0 LPA" class="w-full px-3 py-2 rounded-lg bg-white border border-slate-300 text-slate-900 text-xs focus:outline-none focus:border-[#1B4942]" />
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-xs font-semibold text-slate-700 mb-1">Offering Corporate Entity *</label>
+          <input type="text" id="ppo-company" name="company" required value="Tata Steel Foundation R&D Labs, Jamshedpur" class="w-full px-3 py-2 rounded-lg bg-white border border-slate-300 text-slate-900 text-xs focus:outline-none focus:border-[#1B4942]" />
+        </div>
+
+        <div>
+          <label class="block text-xs font-semibold text-slate-700 mb-1">Corporate Endorsement Citation *</label>
+          <textarea id="ppo-citation" name="citation" rows="3" required class="w-full px-3 py-2 rounded-lg bg-white border border-slate-300 text-slate-900 text-xs focus:outline-none focus:border-[#1B4942]">Demonstrated outstanding engineering capability during the Harmu River drainage telemetry deployment. Exemplary reliability and municipal systems understanding.</textarea>
+        </div>
+
+        <div class="p-2.5 rounded-lg bg-[#EDF4F0] border border-[#CADED4] text-[11px] text-[#1B4942]">
+          This PPO will immediately reflect as a verified <strong>PPO Card</strong> on the student's profile and add a dedicated <strong>PPO Badge</strong> to their Certificate of Resolution.
+        </div>
+
+        <div class="pt-2 flex justify-end gap-2">
+          <button type="button" onclick="closeModal('modal-award-ppo')" class="px-4 py-2 rounded-lg text-xs font-semibold text-slate-600 hover:bg-stone-100">Cancel</button>
+          <button type="submit" class="btn-civic-amber px-4 py-2 rounded-lg text-xs font-semibold shadow-xs flex items-center gap-1">
+            <span>Confirm & Issue PPO</span>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL 8: Student Profile Modal with PPO Offer Card -->
+  <div id="modal-student-profile" class="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs hidden items-center justify-center p-4">
+    <div class="bg-white border border-stone-200 rounded-2xl max-w-xl w-full p-6 sm:p-7 shadow-2xl relative text-slate-900 max-h-[90vh] overflow-y-auto">
+      <button type="button" onclick="closeModal('modal-student-profile')" class="absolute top-4 right-4 text-slate-400 hover:text-slate-700">&times;</button>
+      
+      <div id="student-profile-content">
+        <!-- Injected via app.js -->
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL 9: Industry Reject & Technical Revision Feedback Modal -->
+  <div id="modal-reject-feedback" class="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs hidden items-center justify-center p-4">
+    <div class="bg-white border border-stone-200 rounded-2xl max-w-lg w-full p-6 sm:p-7 shadow-2xl relative text-slate-900 max-h-[90vh] overflow-y-auto">
+      <button type="button" onclick="closeModal('modal-reject-feedback')" class="absolute top-4 right-4 text-slate-400 hover:text-slate-700">&times;</button>
+      
+      <div class="mb-4">
+        <span class="text-xs uppercase font-bold tracking-wider text-rose-700 bg-rose-50 px-2 py-0.5 rounded border border-rose-200">Technical Revision Required</span>
+        <h3 class="font-display text-lg font-bold text-slate-900 mt-1">Return Prototype for Lab Revision</h3>
+        <p class="text-xs text-slate-600 mt-0.5">
+          Specify exact technical refinements needed before this solution can be approved for field pilot deployment.
+        </p>
+      </div>
+
+      <form id="reject-feedback-form" class="space-y-3.5">
+        <input type="hidden" id="reject-submission-id" value="" />
+        
+        <div>
+          <label class="block text-xs font-semibold text-slate-700 mb-1">Technical Improvement Notes *</label>
+          <textarea id="reject-notes" name="notes" rows="4" required class="w-full px-3 py-2 rounded-lg bg-white border border-slate-300 text-slate-900 text-xs focus:outline-none focus:border-rose-600">The ultrasonic transducer enclosure requires an IP67 rated silicone seal for continuous monsoon water immersion. Additionally, firmware must implement deep sleep cycles between LoRa transmissions to guarantee 60-day battery life before municipal ward rollout.</textarea>
+        </div>
+
+        <div class="p-2.5 rounded-lg bg-rose-50 border border-rose-200 text-[11px] text-rose-800">
+          Action: This will set the challenge status back to <strong>"In Progress (Needs Revision)"</strong>, send an alert notification to the student team, and log an engineering revision prompt directly in the team's collaborative workspace chat.
+        </div>
+
+        <div class="pt-2 flex justify-end gap-2">
+          <button type="button" onclick="closeModal('modal-reject-feedback')" class="px-4 py-2 rounded-lg text-xs font-semibold text-slate-600 hover:bg-stone-100">Cancel</button>
+          <button type="submit" class="bg-rose-700 hover:bg-rose-800 text-white px-4 py-2 rounded-lg text-xs font-semibold shadow-xs">
+            Send Feedback & Request Revision
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL 10: Official Government Review & Regulatory Assessment Modal -->
+  <div id="modal-govt-review" class="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs hidden items-center justify-center p-4">
+    <div class="bg-white border border-stone-200 rounded-2xl max-w-lg w-full p-6 sm:p-7 shadow-2xl relative text-slate-900 max-h-[90vh] overflow-y-auto">
+      <button type="button" onclick="closeModal('modal-govt-review')" class="absolute top-4 right-4 text-slate-400 hover:text-slate-700">&times;</button>
+      
+      <div class="mb-4">
+        <div class="flex items-center gap-2">
+          <span class="govt-seal-badge text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded">Verified Official</span>
+          <span class="text-xs font-semibold text-slate-500">Jharkhand Civic Governance</span>
+        </div>
+        <h3 class="font-display text-lg font-bold text-slate-900 mt-1" data-i18n="govtReviewModalHeading">Submit Official Government Assessment</h3>
+        <p class="text-xs text-slate-600 mt-0.5" data-i18n="govtReviewModalDesc">
+          Provide formal administrative feedback, municipal clearance directives, or statutory endorsements.
+        </p>
+      </div>
+
+      <form id="govt-review-form" onsubmit="handleGovtReviewSubmit(event)" class="space-y-3.5">
+        <input type="hidden" id="govt-review-challenge-id" value="NIV-401" />
+        
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div>
+            <label class="block text-xs font-semibold text-slate-700 mb-1" data-i18n="officerNameLabel">Officer Name & Title *</label>
+            <input type="text" id="govt-reviewer-name" required value="Shri Rajesh Verma, IAS" class="w-full px-3 py-2 rounded-lg bg-white border border-slate-300 text-xs focus:outline-none focus:border-[#1E3A5F]" />
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-slate-700 mb-1" data-i18n="officerDeptLabel">Department / Authority *</label>
+            <input type="text" id="govt-reviewer-dept" required value="JUIDCO / Urban Development & Housing Dept" class="w-full px-3 py-2 rounded-lg bg-white border border-slate-300 text-xs focus:outline-none focus:border-[#1E3A5F]" />
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-xs font-semibold text-slate-700 mb-1" data-i18n="assessmentStatusLabel">Administrative Assessment Status *</label>
+          <select id="govt-review-status" class="w-full px-3 py-2 rounded-lg bg-white border border-slate-300 text-xs focus:outline-none focus:border-[#1E3A5F]">
+            <option value="Pilot Clearance Granted" selected>Pilot Clearance Granted (Formal Approval)</option>
+            <option value="Statutory Compliance Approved">Statutory Compliance Approved</option>
+            <option value="Site Inspection Scheduled">Site Inspection Scheduled by Ward Engineers</option>
+            <option value="Technical Review Endorsed">Technical Review Endorsed</option>
+          </select>
+        </div>
+
+        <div>
+          <label class="block text-xs font-semibold text-slate-700 mb-1" data-i18n="officialRemarksLabel">Official Remarks & Municipal Directives *</label>
+          <textarea id="govt-review-notes" rows="4" required class="w-full px-3 py-2 rounded-lg bg-white border border-slate-300 text-slate-900 text-xs focus:outline-none focus:border-[#1E3A5F]">The proposed telemetry station and silt monitoring protocols conform to Jharkhand Municipal SWM & Flood Management Guidelines 2024. Pilot installation clearance is hereby approved for Ward 26 feeder canal, with real-time API telemetry stream integration into the Ranchi Municipal Corporation (RMC) Central Disaster Cell.</textarea>
+        </div>
+
+        <div class="p-2.5 rounded-lg bg-sky-50 border border-sky-200 text-[11px] text-sky-900">
+          <strong>Official Transparency:</strong> This review will be published openly on the challenge record with a verified governmental attribution badge.
+        </div>
+
+        <div class="pt-2 flex justify-end gap-2">
+          <button type="button" onclick="closeModal('modal-govt-review')" class="px-4 py-2 rounded-lg text-xs font-semibold text-slate-600 hover:bg-stone-100" data-i18n="cancelBtn">Cancel</button>
+          <button type="submit" class="btn-civic-slate px-4 py-2 rounded-lg text-xs font-semibold shadow-xs" data-i18n="publishReviewBtn">
+            Publish Official Review &rarr;
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Toast Notification Container -->
+  <div id="toast" class="fixed bottom-6 right-6 z-50 transform translate-y-20 opacity-0 transition-all duration-300 pointer-events-none">
+    <div class="bg-white border border-[#CADED4] text-slate-900 px-5 py-3 rounded-xl shadow-lg flex items-center gap-3">
+      <div class="w-7 h-7 rounded-lg bg-[#EDF4F0] text-[#1B4942] flex items-center justify-center flex-shrink-0">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+        </svg>
+      </div>
+      <div>
+        <h5 id="toast-title" class="font-bold text-xs text-slate-900">Success</h5>
+        <p id="toast-message" class="text-[11px] text-slate-600">Action performed successfully.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Global Footer -->
+  <footer class="mt-auto border-t border-stone-200 bg-stone-100 py-10 text-xs text-slate-600">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row items-center justify-between gap-4">
+      <div class="flex items-center gap-2">
+        <div class="w-7 h-7 rounded-lg bg-[#EDF4F0] border border-[#CADED4] flex items-center justify-center text-[#1B4942]">
+          <svg class="w-4 h-4" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect x="5" y="7" width="3.5" height="18" rx="1.75" fill="#1B4942" />
+            <rect x="23.5" y="7" width="3.5" height="18" rx="1.75" fill="#1B4942" />
+            <path d="M7 23L24 9" stroke="#2D6A4F" stroke-width="2.75" stroke-linecap="round" />
+            <path d="M18.5 9H24V14.5" stroke="#2D6A4F" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" />
+            <circle cx="15.5" cy="16" r="2.75" fill="#B45309" stroke="#FFFFFF" stroke-width="1.25" />
+          </svg>
+        </div>
+        <span class="font-display font-bold text-slate-900">NIVARAN</span>
+        <span class="text-slate-400">&bull;</span>
+        <span>From Reported to Resolved. National Civic Innovation Initiative.</span>
+      </div>
+      <div class="flex items-center gap-4 text-slate-500">
+        <a href="#/" class="hover:text-[#1B4942]">Home</a>
+        <a href="#/challenges" class="hover:text-[#1B4942]">Challenges</a>
+        <a href="#/post-challenge" class="hover:text-[#1B4942]">Post Challenge</a>
+        <a href="#/dashboard" class="hover:text-[#1B4942]">Dashboard</a>
+      </div>
+      <div class="text-slate-400 text-[11px]">
+        &copy; 2026 NIVARAN Platform. All Rights Reserved.
+      </div>
+    </div>
+  </footer>
+
+  <!-- Application Logic Scripts -->
+  <script src="app.js"></script>
+</body>
+</html>
